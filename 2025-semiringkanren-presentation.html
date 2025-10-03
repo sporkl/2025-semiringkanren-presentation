@@ -1827,8 +1827,8 @@ relevance:0},{begin:/-&gt;/}]})})();hljs.registerLanguage(&quot;ocaml&quot;,e)})
 &lt;p pause&gt;&lt;span style=&quot;float:left&quot;&gt;&lt;span&gt;top-down evaluation&lt;/span&gt;&lt;/span&gt;
 &lt;span style=&quot;float:right&quot;&gt;&lt;span&gt;bottom-up evaluation&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;br /&gt;
-&lt;p pause&gt;&lt;span style=&quot;float:left&quot;&gt;&lt;span&gt;relations are functions on streams&lt;/span&gt;&lt;/span&gt;
-&lt;span style=&quot;float:right&quot;&gt;&lt;span&gt;relations are multidimensional arrays&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p pause&gt;&lt;span style=&quot;float:left&quot;&gt;&lt;span&gt;relations compute functions on streams&lt;/span&gt;&lt;/span&gt;
+&lt;span style=&quot;float:right&quot;&gt;&lt;span&gt;relations compute multidimensional arrays&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;br /&gt;
 &lt;p pause&gt;&lt;span style=&quot;float:left&quot;&gt;&lt;span&gt;dynamically typed (s-expressions)&lt;/span&gt;&lt;/span&gt;
 &lt;span style=&quot;float:right&quot;&gt;&lt;span&gt;statically typed (algebraic data types)&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
@@ -1842,11 +1842,11 @@ relevance:0},{begin:/-&gt;/}]})})();hljs.registerLanguage(&quot;ocaml&quot;,e)})
 &lt;div style=&quot;float:none&quot;&gt;&lt;/div&gt;
 &lt;br /&gt;
 &lt;/div&gt;
-&lt;div id=&quot;coin-flip-minikanren&quot; class=&quot;example&quot; title=&quot;Coin flip - miniKanren&quot; unreveal-at-unpause=&quot;coin-flip-semiringkanren&quot; pause&gt;
+&lt;div id=&quot;coin-flip-minikanren&quot; class=&quot;example&quot; title=&quot;Coin flip - miniKanren&quot; center-at-unpause unreveal-at-unpause=&quot;coin-flip-semiringkanren&quot; pause&gt;
 &lt;pre&gt;&lt;code&gt;(defrel (coin-flip c)
-    (disj
-        (== c 'heads)
-        (== c 'tails)))
+  (disj
+    (== c 'heads)
+    (== c 'tails)))
 (run* (coin) (coin-flip coin))
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;span&gt;Returns &lt;/span&gt;&lt;code&gt;'heads&lt;/code&gt;&lt;span&gt; and &lt;/span&gt;&lt;code&gt;'tails&lt;/code&gt;&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
@@ -1854,16 +1854,18 @@ relevance:0},{begin:/-&gt;/}]})})();hljs.registerLanguage(&quot;ocaml&quot;,e)})
 &lt;div id=&quot;coin-flip-semiringkanren&quot; class=&quot;example&quot; title=&quot;Coin flip - semiringKanren&quot;&gt;
 &lt;p&gt;&lt;span&gt;Represent heads as &lt;/span&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;span&gt; and tails as &lt;/span&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;(defrel (coin-flip (c : (Sum Unit Unit)))
-    (disj
-        (fresh (u : Unit) (lefto (c : (Sum Unit Unit) (u : Unit))))
-        (fresh (u : Unit) (righto (c : (Sum Unit Unit) (u : Unit))))))
+  (disj
+    (fresh (u : Unit)
+      (lefto (c : (Sum Unit Unit) (u : Unit))))
+    (fresh (u : Unit)
+      (righto (c : (Sum Unit Unit) (u : Unit))))))
 
 (run ((coin : (Sum Unit Unit))) (coin-flip coin))
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;span&gt;Returns &lt;/span&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;span&gt; corresponding to heads, and &lt;/span&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;span&gt; corresponding to tails.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span&gt;Returns &lt;/span&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;span&gt; for heads, and &lt;/span&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;span&gt; for tails.&lt;/span&gt;&lt;/p&gt;
 &lt;/div&gt;
-&lt;div unreveal-at-unpause=&quot;weighted-coin-flip&quot; center-at-unpause&gt;
-&lt;p&gt;&lt;span&gt;semiringKanren variables are typed.&lt;/span&gt;&lt;/p&gt;
+&lt;div&gt;
+&lt;p up-at-unpause unreveal-at-unpause=&quot;weighted-coin-flip&quot;&gt;&lt;span&gt;semiringKanren variables are typed.&lt;/span&gt;&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;; x has type A, y has type B
 (x : A)
 (y : B)
@@ -1877,9 +1879,15 @@ relevance:0},{begin:/-&gt;/}]})})();hljs.registerLanguage(&quot;ocaml&quot;,e)})
 
 ; Product type
 ((pair x y) : (Prod A B))
+
+; example: Boolean type
+(define Bool (Sum Unit Unit))
+(define true (left sole))
+(define false (right unit))
 &lt;/code&gt;&lt;/pre&gt;
-&lt;div reveal-at-unpause=&quot;coin-flip-semiringkanren&quot; up-at-unpause=&quot;coin-flip-minikanren&quot;&gt;&lt;/div&gt;
-&lt;p pause center-at-unpause=&quot;semirings&quot;&gt;&lt;span&gt;We can use &lt;/span&gt;&lt;code&gt;(factor w)&lt;/code&gt;&lt;span&gt; to &amp;quot;weight&amp;quot; branches of a semiringKanren program, where &lt;/span&gt;&lt;code&gt;w&lt;/code&gt;&lt;span&gt; is an arbitrary semiring element.&lt;/span&gt;&lt;/p&gt;
+&lt;div reveal-at-unpause=&quot;coin-flip-semiringkanren&quot; down-at-unpause=&quot;coin-flip-semiringkanren&quot;&gt;&lt;/div&gt;
+&lt;div center-at-unpause=&quot;coin-flip-minikanren&quot;&gt;&lt;/div&gt;
+&lt;p pause center-at-unpause=&quot;semirings&quot;&gt;&lt;code&gt;(factor w)&lt;/code&gt;&lt;span&gt; adds &amp;quot;weight&amp;quot; to a program branch, where &lt;/span&gt;&lt;code&gt;w&lt;/code&gt;&lt;span&gt; is a semiring element.&lt;/span&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&quot;semirings&quot; class=&quot;definition&quot; title=&quot;Semirings&quot;&gt;
 &lt;p&gt;&lt;span&gt;A &lt;/span&gt;&lt;em&gt;&lt;span&gt;semiring&lt;/span&gt;&lt;/em&gt;&lt;span&gt; (or &lt;/span&gt;&lt;em&gt;&lt;span&gt;rig&lt;/span&gt;&lt;/em&gt;&lt;span&gt;) is a set &lt;/span&gt;\(R\)&lt;span&gt; with &lt;/span&gt;\(+\)&lt;span&gt; and &lt;/span&gt;\(*\)&lt;span&gt; operations, with corresponding identity elements &lt;/span&gt;\(0\)&lt;span&gt; and &lt;/span&gt;\(1\)&lt;span&gt;, such that:&lt;/span&gt;&lt;/p&gt;
@@ -1889,12 +1897,16 @@ a * (b + c) = (a * b) + (b * c)
 &lt;p&gt;&lt;span&gt;(and some additional properties).&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span&gt;Examples: real numbers with addition and multiplication, booleans with &lt;/span&gt;\(\vee\)&lt;span&gt; and &lt;/span&gt;\(\wedge\)&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
 &lt;/div&gt;
-&lt;div class=&quot;example&quot; title=&quot;Weighted coin flip&quot; up-at-unpause=&quot;semirings&quot; pause&gt;
+&lt;div class=&quot;example&quot; title=&quot;Weighted coin flip&quot; center-at-unpause pause&gt;
 &lt;p&gt;&lt;span&gt;Assuming some semiring over &lt;/span&gt;\(\mathbb{R}\)&lt;span&gt;:&lt;/span&gt;&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;(defrel (unfair (coin : (Sum Unit Unit)))
-    (disj
-        (conj (factor 0.7) (fresh ((u : Unit)) (lefto coin u)))
-        (conj (factor 0.3) (fresh ((u : Unit)) (righto coin u)))))
+  (disj
+    (conj
+      (factor 0.7)
+      (fresh ((u : Unit)) (lefto coin u)))
+    (conj
+      (factor 0.3)
+      (fresh ((u : Unit)) (righto coin u)))))
 
 (run ((coin : (Sum Unit Unit))) (unfair coin))
 &lt;/code&gt;&lt;/pre&gt;
@@ -1902,38 +1914,28 @@ a * (b + c) = (a * b) + (b * c)
 &lt;/div&gt;
 &lt;p up-at-unpause pause&gt;&lt;span&gt;semiringKanren supports recursion!&lt;/span&gt;&lt;/p&gt;
 &lt;div class=&quot;example&quot; title=&quot;Transitive closure&quot;&gt;
-&lt;p&gt;&lt;span&gt;Note: this example uses pseudo-syntax for brevity.&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span&gt;Let nodes in a graph be represented as natural numbers using a sum type, where the number of &amp;quot;right&amp;quot; constructors used corresponds to the integer value:&lt;/span&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(define Num (Sum Unit (Sum Unit (Sum Unit Unit))))
-
-(define 0 ((left sole) : Num))
-(define 1 ((right (left sole)) : Num))
-(define 2 ((right (right (left sole))) : Num))
-(define 3 ((right (right (right (left sole)))) : Num))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;div pause&gt;&lt;/div&gt;
-&lt;p&gt;&lt;span&gt;Represent a graph as a relation between nodes:&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;data:image/png;base64,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&quot; alt=&quot;&quot; &gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(defrel (graph (x : Num) (y : Num))
-    (disj
-        (conj (== x 0) (== y 1))
-        (conj (== x 1) (== y 0))
-        (conj (== x 1) (== y 2))
-        (conj (== x 3) (== y 2))))
+&lt;p&gt;&lt;span&gt;Represent a graph as a relation between nodes (pseudo-syntax):&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;data:image/jpeg;base64,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&quot; alt=&quot;&quot; &gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;(defrel (grapho (x : Num) (y : Num))
+  (disj
+    (conj (== x 0) (== y 1))
+    (conj (== x 1) (== y 0))
+    (conj (== x 1) (== y 2))
+    (conj (== x 3) (== y 2))))
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p pause center-at-unpause&gt;&lt;span&gt;We can express connectivity (or &amp;quot;transitive closure&amp;quot;) in this graph as a recursive relation:&lt;/span&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(defrel (connect (x : Num) (y : Num))
-    (disj
-        (graph x y)
-        (fresh ((z : Num))
-            (conj
-                (connect x z)
-                (connect z y)))))
+&lt;pre&gt;&lt;code&gt;(defrel (connecto (x : Num) (y : Num))
+  (disj
+    (graph x y)
+    (fresh ((z : Num))
+      (conj
+        (connect x z)
+        (connect z y)))))
 &lt;/code&gt;&lt;/pre&gt;
-&lt;pre pause center-at-unpause&gt;&lt;code&gt;(run ((x : Num) (y : Num)) (connect x y))
+&lt;pre id=&quot;run-transitive-closure&quot; pause center-at-unpause&gt;&lt;code&gt;(run ((x : Num) (y : Num)) (connect x y))
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;span&gt;The results change depending on the semiring. For the boolean semiring, we get reachability:&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;data:image/png;base64,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&quot; alt=&quot;&quot; style=&quot;float:right&quot; &gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;data:image/jpeg;base64,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&quot; alt=&quot;&quot; style=&quot;float:right&quot; &gt;&lt;/p&gt;
 &lt;div style=&quot;float:none&quot;&gt;&lt;/div&gt;
 &lt;div role=&quot;region&quot;&gt;&lt;table&gt;
 &lt;tr&gt;
@@ -2009,7 +2011,8 @@ a * (b + c) = (a * b) + (b * c)
 &lt;td&gt;\(1\)&lt;/td&gt;
 &lt;td&gt;\(\infty\)&lt;/td&gt;
 &lt;/tr&gt;
-&lt;/table&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/table&gt;&lt;/div&gt;&lt;p&gt;&lt;span&gt;Assuming each path in the original graph is given weight 1 with &lt;/span&gt;&lt;code&gt;(factor 1)&lt;/code&gt;&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -2019,66 +2022,43 @@ a * (b + c) = (a * b) + (b * c)
 &lt;div class=&quot;slip-body&quot;&gt;
 &lt;div&gt;
 &lt;div&gt;
-&lt;h2 id=&quot;implementation&quot;&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#implementation&quot;&gt;&lt;/a&gt;&lt;span&gt;Implementation&lt;/span&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;semantics-and-implementation&quot;&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#semantics-and-implementation&quot;&gt;&lt;/a&gt;&lt;span&gt;Semantics and Implementation&lt;/span&gt;&lt;/h2&gt;
 &lt;br /&gt;
 &lt;div pause&gt;&lt;/div&gt;
 &lt;div id=&quot;relations-are-arrays&quot;&gt;
-&lt;h1 id=&quot;relations-are-multidimensional-arrays&quot;&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#relations-are-multidimensional-arrays&quot;&gt;&lt;/a&gt;&lt;span&gt;Relations are (multidimensional) arrays.&lt;/span&gt;&lt;/h1&gt;
+&lt;h1 id=&quot;relations-compute-ndarrays&quot;&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#relations-compute-ndarrays&quot;&gt;&lt;/a&gt;&lt;span&gt;Relations compute (nd)arrays.&lt;/span&gt;&lt;/h1&gt;
 &lt;p style=&quot;text-align:center&quot;&gt;&lt;span id=&quot;with-associated-types&quot;&gt;&lt;span&gt;(with associated types)&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;/div&gt;
-&lt;div id=&quot;relations-variables-br&quot;&gt;
-&lt;br /&gt;
-&lt;/div&gt;
 &lt;h1 id=&quot;variables-are-dimensions&quot; pause&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#variables-are-dimensions&quot;&gt;&lt;/a&gt;&lt;span&gt;Variables are specific dimensions of relation arrays.&lt;/span&gt;&lt;/h1&gt;
-&lt;div id=&quot;variables-goals-br&quot;&gt;
-&lt;br /&gt;
-&lt;/div&gt;
 &lt;h1 id=&quot;goals-are-operations&quot; pause&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#goals-are-operations&quot;&gt;&lt;/a&gt;&lt;span&gt;Goals are operations on relation arrays.&lt;/span&gt;&lt;/h1&gt;
 &lt;/div&gt;
 &lt;div id=&quot;variable-vectors&quot;&gt;
 &lt;div&gt;
-&lt;div static-at-unpause=&quot;relations-are-arrays variables-are-dimensions&quot; unstatic-at-unpause=&quot;goals-are-operations with-associated-types relations-variables-br variables-goals-br&quot; up-at-unpause=&quot;relations-are-arrays&quot;&gt;&lt;/div&gt;
-&lt;p pause&gt;&lt;span&gt;If we reduce a multidimensional array to a single dimension, we get a 1-dimensional array (vector).&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;span&gt;In semiringKanren, variables must be typed.&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;span&gt;How to represent a strongly-typed value as a vector?&lt;/span&gt;&lt;/p&gt;
-&lt;br /&gt;
-&lt;p id=&quot;sole-to-one&quot; pause&gt;&lt;span&gt;Unit-typed values turn into the vector with one entry:&lt;/span&gt;&lt;/p&gt;
-\[
-\text{sole}\;\leadsto [1] \\
-\]
-&lt;p pause&gt;&lt;span&gt;Sum-typed values are handled by Kronecker sum:&lt;/span&gt;&lt;/p&gt;
-\[
-(\text{left}\;x)\;\leadsto \vec{x} \oplus [0]^{\oplus |\vec{y}|}
-\]
-\[
-{(\text{right}\;y)} \leadsto [0]^{\oplus |\vec{x}|} \oplus\vec{y} 
-\]
-&lt;p pause&gt;&lt;span&gt;Product-typed values are handled by Kronecker product:&lt;/span&gt;&lt;/p&gt;
-\[
-{(\text{pair}\;x\;y)} \leadsto \vec{x} \otimes\vec{y} 
-\]
+&lt;div static-at-unpause=&quot;relations-are-arrays variables-are-dimensions&quot; unstatic-at-unpause=&quot;goals-are-operations with-associated-types&quot; up-at-unpause=&quot;relations-are-arrays&quot;&gt;&lt;/div&gt;
+&lt;p pause&gt;&lt;span&gt;Values are represented as 1-dimensional arrays.&lt;/span&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;example&quot; pause up-at-unpause=&quot;sole-to-one&quot; title=&quot;Pair of booleans&quot;&gt;
-&lt;p&gt;&lt;span&gt;Let's transform the value &lt;/span&gt;&lt;code&gt;(pair (left sole) (right sole))&lt;/code&gt;&lt;span&gt; of type &lt;/span&gt;&lt;code&gt;(Prod (Sum Unit Unit) (Sum Unit Unit))&lt;/code&gt;&lt;span&gt; into a vector:&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(pair (left sole) (right sole))&lt;/code&gt;&lt;span&gt; of type:&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(Prod (Sum Unit Unit) (Sum Unit Unit))&lt;/code&gt;&lt;/p&gt;
 &lt;div pause&gt;
 \[
 \text{sole} \leadsto [1]
 \]
 &lt;/div&gt;
-&lt;div pause&gt;
+&lt;div pause center-at-unpause&gt;
 \[
-(\text{left}\;\text{sole}) : (\text{Sum}\;\text{Unit}\;\text{Unit}) \leadsto [1] \oplus [0]^{\oplus 1} = [1] \oplus [0] = [1, 0]
+(\text{left}\;\text{sole}) : (\text{Sum}\;\text{Unit}\;\text{Unit}) \leadsto [1] \oplus [0] = [1, 0]
 \]
 &lt;/div&gt;
 \[
-(\text{right}\;\text{sole}) : (\text{Sum}\;\text{Unit}\;\text{Unit}) \leadsto[0]^{\oplus 1} \oplus [1] = [0] \oplus [1] = [0, 1]
+(\text{right}\;\text{sole}) : (\text{Sum}\;\text{Unit}\;\text{Unit}) \leadsto [0] \oplus [1] = [0, 1]
 \]
 &lt;div pause&gt;
 \[
-(\text{pair}\;(\text{left}\;\text{sole})\;(\text{right}\;\text{sole})) \leadsto [1, 0] \otimes [0, 1] = [1 * [0, 1], 0 * [0, 1]] = [0, 1, 0, 0]
+(\text{pair}\;(\text{left}\;\text{sole})\;(\text{right}\;\text{sole})) \leadsto [1, 0] \otimes [0, 1] = [0, 1, 0, 0]
 \]
 &lt;/div&gt;
-&lt;p pause center-at-unpause&gt;&lt;span&gt;Here's the full list of encodings for the type:&lt;/span&gt;&lt;/p&gt;
+&lt;p pause center-at-unpause&gt;&lt;span&gt;All encodings for the type:&lt;/span&gt;&lt;/p&gt;
 \[
 (\text{pair}\;(\text{left}\;\text{sole})\;(\text{left}\;\text{sole})) \leadsto [1, 0, 0, 0]
 \]
@@ -2092,33 +2072,25 @@ a * (b + c) = (a * b) + (b * c)
 (\text{pair}\;(\text{right}\;\text{sole})\;(\text{right}\;\text{sole})) \leadsto [0, 0, 0, 1]
 \]
 &lt;/div&gt;
-&lt;p pause&gt;&lt;span&gt;Each value is encoded as a &lt;/span&gt;&lt;em&gt;&lt;span&gt;one-hot vector&lt;/span&gt;&lt;/em&gt;&lt;span&gt;. The size of the vector is the size of the type. The singular nonzero entry in the vector corresponds to a specific value of the type.&lt;/span&gt;&lt;/p&gt;
+&lt;p pause unreveal-at-unpause=&quot;relations-compute-arrays-2&quot; center-at-unpause&gt;&lt;span&gt;Values become one-hot vectors. Type size becomes vector size.&lt;/span&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&quot;relation-arrays&quot;&gt;
-&lt;p center-at-unpause pause&gt;&lt;span&gt;... what if there is more than one non-zero entry in the vector?&lt;/span&gt;&lt;/p&gt;
-&lt;div class=&quot;example&quot; title=&quot;Pair of equal booleans&quot; pause&gt;
-&lt;p&gt;&lt;span&gt;Consider the vector &lt;/span&gt;\([1, 0, 0, 1]\)&lt;span&gt; with associated type &lt;/span&gt;&lt;code&gt;(Prod (Sum Unit Unit) (Sum Unit Unit))&lt;/code&gt;&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;span&gt;This vector has entries corresponding to the values &lt;/span&gt;&lt;code&gt;(pair (left sole) (left sole))&lt;/code&gt;&lt;span&gt; and &lt;/span&gt;&lt;code&gt;(pair (right sole) (right sole))&lt;/code&gt;&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;span&gt;It seems to represent pairs where the first element is equal to the second...&lt;/span&gt;&lt;/p&gt;
-&lt;div unstatic-at-unpause=&quot;variables-are-dimensions goals-are-operations with-associated-types relations-variables-br variables-goals-br variable-vectors&quot; static-at-unpause=&quot;relations-are-arrays&quot; up-at-unpause=&quot;relations-are-arrays&quot;&gt;&lt;/div&gt;
-&lt;div pause&gt;&lt;/div&gt;
-&lt;p&gt;&lt;span&gt;This is the relation on pairs of &lt;/span&gt;&lt;code&gt;(Sum Unit Unit)&lt;/code&gt;&lt;span&gt;s (booleans) where the first boolean is equal to the second!&lt;/span&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(defrel (equal-bool-pair (xy : (Prod (Sum Unit Unit) (Sum Unit Unit))))
-    (fresh (x : (Sum Unit Unit))
-        (fresh (y : (Sum Unit Unit))
-            (conj
-                (pairo bp x y)
-                (== x y)))))
-&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&quot;relations-compute-arrays-2&quot;&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#relations-compute-arrays-2&quot;&gt;&lt;/a&gt;&lt;span&gt;Relations compute (nd)arrays.&lt;/span&gt;&lt;/h1&gt;
+&lt;div id=&quot;two-hot-vector&quot; class=&quot;example&quot; title=&quot;Two-hot vector&quot; pause&gt;
+&lt;p&gt;&lt;span&gt;What if we have something like &lt;/span&gt;\([1, 0, 0, 1]\)&lt;span&gt;?&lt;/span&gt;&lt;/p&gt;
+&lt;div pause reveal-at-unpause=&quot;relations-compute-arrays-2&quot;&gt;&lt;/div&gt;
+&lt;p pause&gt;&lt;code&gt;(pair (left sole) (left sole))&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;(pair (right sole) (right sole))&lt;/code&gt;&lt;span&gt; succeed! The other values fail.&lt;/span&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div&gt;
-&lt;p pause&gt;&lt;span&gt;Relations are arrays where nonzero entries correspond to values that succeed, and zero entries correspond to values that fail.&lt;/span&gt;&lt;/p&gt;
-&lt;p pause center-at-unpause&gt;&lt;span&gt;How does this work for more than one argument?&lt;/span&gt;&lt;/p&gt;
+&lt;div pause up-at-unpause=&quot;relations-compute-arrays-2&quot;&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span&gt;Relations compute arrays: nonzero entries succeed, zero entries fail.&lt;/span&gt;&lt;/p&gt;
+&lt;div pause&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span&gt;Relations on more than one variable?&lt;/span&gt;&lt;/p&gt;
 &lt;h1 id=&quot;variables-are-dimensions-2&quot; pause center-at-unpause&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#variables-are-dimensions-2&quot;&gt;&lt;/a&gt;&lt;span&gt;Variables are specific dimensions of relation arrays.&lt;/span&gt;&lt;/h1&gt;
 &lt;div pause up-at-unpause=&quot;variables-are-dimensions-2&quot;&gt;&lt;/div&gt;
 &lt;p&gt;&lt;span&gt;Consider some relation on two booleans:&lt;/span&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(defrel (bool-rel (x : (Sum Unit Unit)) (y : (Sum Unit Unit)))
-    ...)
+&lt;pre&gt;&lt;code&gt;(defrel (bool-rel (x : Bool) (y : Bool))
+  ...)
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p pause&gt;&lt;span&gt;Then &lt;/span&gt;&lt;code&gt;x&lt;/code&gt;&lt;span&gt; and &lt;/span&gt;&lt;code&gt;y&lt;/code&gt;&lt;span&gt; each get a dimension of the relation's array:&lt;/span&gt;&lt;/p&gt;
 \[
@@ -2132,12 +2104,12 @@ a * (b + c) = (a * b) + (b * c)
 \end{matrix}
 \]
 &lt;/div&gt;
-&lt;div class=&quot;example&quot; title=&quot;Equal booleans&quot; center-at-unpause pause&gt;
+&lt;div class=&quot;example&quot; title=&quot;Equal booleans&quot; down-at-unpause pause&gt;
 &lt;p&gt;&lt;span&gt;If we consider the relation where &lt;/span&gt;&lt;code&gt;x&lt;/code&gt;&lt;span&gt; equals &lt;/span&gt;&lt;code&gt;y&lt;/code&gt;&lt;span&gt;...&lt;/span&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(defrel (equal-bools (x : (Sum Unit Unit)) (y : (Sum Unit Unit)))
-    (== x y))
+&lt;pre&gt;&lt;code&gt;(defrel (equal-bools (x : Bool) (y : Bool))
+  (== x y))
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p pause&gt;&lt;span&gt;Then &lt;/span&gt;&lt;code&gt;x&lt;/code&gt;&lt;span&gt; should be &lt;/span&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;span&gt; when &lt;/span&gt;&lt;code&gt;y&lt;/code&gt;&lt;span&gt; is &lt;/span&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;span&gt;, and same for &lt;/span&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
+&lt;p pause&gt;&lt;span&gt;Then &lt;/span&gt;&lt;code&gt;x&lt;/code&gt;&lt;span&gt; should be &lt;/span&gt;&lt;code&gt;true&lt;/code&gt;&lt;span&gt; when &lt;/span&gt;&lt;code&gt;y&lt;/code&gt;&lt;span&gt; is &lt;/span&gt;&lt;code&gt;true&lt;/code&gt;&lt;span&gt;, and same for &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
 &lt;div style=&quot;float:right&quot;&gt;
 \[
 \begin{bmatrix}
@@ -2150,33 +2122,32 @@ a * (b + c) = (a * b) + (b * c)
 &lt;div role=&quot;region&quot;&gt;&lt;table&gt;
 &lt;tr&gt;
 &lt;th&gt;&lt;/th&gt;
-&lt;th&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;/th&gt;
-&lt;th&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;/th&gt;
+&lt;th&gt;&lt;code&gt;true&lt;/code&gt;&lt;span&gt;   &lt;/span&gt;&lt;/th&gt;
+&lt;th&gt;&lt;code&gt;false&lt;/code&gt;&lt;/th&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\;\; 1\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad 0\)&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;&lt;code&gt;true&lt;/code&gt;&lt;/strong&gt;&lt;span&gt;  &lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;\(1\)&lt;/td&gt;
+&lt;td&gt;\(0\)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\;\; 0\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad 1\)&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;&lt;code&gt;false&lt;/code&gt;&lt;/strong&gt;&lt;span&gt;  &lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;\(0\)&lt;/td&gt;
+&lt;td&gt;\(1\)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/table&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;/div&gt;
-&lt;div class=&quot;example&quot; title=&quot;Specific boolean, any trilean&quot; center-at-unpause pause&gt;
+&lt;div class=&quot;example&quot; title=&quot;One specific boolean&quot; center-at-unpause pause&gt;
 &lt;p&gt;&lt;span&gt;If we consider a relation where only one variable is conditioned:&lt;/span&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(defrel (any-trilean (b : (Sum Unit Unit)) (t : (Sum Unit (Sum Unit Unit))))
-    (fresh (u : Unit)
-        (lefto b u)))
+&lt;pre&gt;&lt;code&gt;(defrel (any-trilean (b : Bool) (t : (Sum Unit Bool)))
+  (trueo x))
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p pause unreveal-at-unpause=&quot;goals-are-operations-2&quot;&gt;&lt;span&gt;Then the values for each variable are restricted/unrestricted accordingly:&lt;/span&gt;&lt;/p&gt;
 &lt;div style=&quot;float:right&quot;&gt;
 \[
 \begin{bmatrix}
-[1, 1, 1], \\
-[0, 0, 0]
+[1, 1], \\
+[0, 0]
 \end{bmatrix}
 \]
 &lt;/div&gt;
@@ -2184,403 +2155,213 @@ a * (b + c) = (a * b) + (b * c)
 &lt;div role=&quot;region&quot;&gt;&lt;table&gt;
 &lt;tr&gt;
 &lt;th&gt;&lt;/th&gt;
-&lt;th&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;/th&gt;
-&lt;th&gt;&lt;code&gt;(right (left sole))&lt;/code&gt;&lt;/th&gt;
-&lt;th&gt;&lt;code&gt;(right (right sole))&lt;/code&gt;&lt;/th&gt;
+&lt;th&gt;&lt;code&gt;true&lt;/code&gt;&lt;span&gt;   &lt;/span&gt;&lt;/th&gt;
+&lt;th&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt;  &lt;/span&gt;&lt;/th&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\;\; 1\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad\quad\;\; 1\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad\quad\quad 1\)&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;&lt;code&gt;true&lt;/code&gt;&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;\(1\)&lt;/td&gt;
+&lt;td&gt;\(1\)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\;\; 0\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad\quad\;\; 0\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad\quad\quad 0\)&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;&lt;code&gt;false&lt;/code&gt;&lt;/strong&gt;&lt;span&gt;  &lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;\(0\)&lt;/td&gt;
+&lt;td&gt;\(0\)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/table&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&quot;goal-operations&quot;&gt;
-&lt;div&gt;
 &lt;h1 id=&quot;goals-are-operations-2&quot;&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#goals-are-operations-2&quot;&gt;&lt;/a&gt;&lt;span&gt;Goals are operations on relation arrays.&lt;/span&gt;&lt;/h1&gt;
 &lt;p center-at-unpause pause&gt;&lt;span&gt;How do we use these relation arrays in practice?&lt;/span&gt;&lt;/p&gt;
 &lt;div pause reveal-at-unpause=&quot;goals-are-operations-2&quot; up-at-unpause=&quot;goals-are-operations-2&quot;&gt;&lt;/div&gt;
 &lt;p pause&gt;&lt;span&gt;There are two types of goals:&lt;/span&gt;&lt;/p&gt;
 &lt;div id=&quot;relation-goals&quot; pause&gt;
-&lt;h2 id=&quot;goals-which-are-essentially-relations&quot;&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#goals-which-are-essentially-relations&quot;&gt;&lt;/a&gt;&lt;span&gt;Goals which are essentially relations&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;soleo&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;lefto&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;righto&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;pairo&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;==&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;=/=&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;succeed&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;fail&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;factor&lt;/code&gt;&lt;span&gt;, and relation application.&lt;/span&gt;&lt;/p&gt;
+&lt;h2 id=&quot;low-level-relations&quot;&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#low-level-relations&quot;&gt;&lt;/a&gt;&lt;span&gt;Low-level relations&lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;soleo&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;lefto&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;righto&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;pairo&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;==&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;=/=&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;succeed&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;fail&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;factor&lt;/code&gt;&lt;span&gt;,&lt;/span&gt;&lt;br /&gt;&lt;span&gt;and relation application&lt;/span&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&quot;combine-goals&quot; pause&gt;
-&lt;h2 id=&quot;goals-which-combine-other-goals&quot;&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#goals-which-combine-other-goals&quot;&gt;&lt;/a&gt;&lt;span&gt;Goals which combine other goals&lt;/span&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;goal-combinators&quot;&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#goal-combinators&quot;&gt;&lt;/a&gt;&lt;span&gt;Goal combinators&lt;/span&gt;&lt;/h2&gt;
 &lt;p&gt;&lt;code&gt;conj&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;disj&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;fresh&lt;/code&gt;&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
 &lt;/div&gt;
-&lt;div id=&quot;goals-return-relations&quot; pause&gt;
-&lt;br /&gt;
-Goals return relations!
-&lt;/div&gt;
-&lt;div static-at-unpause=&quot;relation-goals&quot; unstatic-at-unpause=&quot;combine-goals goals-return-relations&quot; up-at-unpause=&quot;relation-goals&quot;&gt;&lt;/div&gt;
-&lt;p pause&gt;&lt;span&gt;We saw earlier that &lt;/span&gt;&lt;code&gt;==&lt;/code&gt;&lt;span&gt; on booleans becomes:&lt;/span&gt;&lt;/p&gt;
-&lt;div style=&quot;float:right&quot;&gt;
+&lt;div pause static-at-unpause=&quot;relation-goals&quot; unstatic-at-unpause=&quot;combine-goals&quot; up-at-unpause=&quot;relation-goals&quot;&gt;&lt;/div&gt;
+&lt;div pause&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span style=&quot;float:left&quot;&gt;&lt;code&gt;(== x y)&lt;/code&gt;&lt;/span&gt;&lt;/p&gt;
 \[
 \begin{bmatrix}
-[1, 0], \\
-[0, 1]
+1 &amp;amp; 0 &amp;amp; 0 \\
+0 &amp;amp; \ddots &amp;amp; 0 \\
+0 &amp;amp; 0 &amp;amp; 1
 \end{bmatrix}
 \]
-&lt;/div&gt;
-&lt;div style=&quot;float:none&quot;&gt;
-&lt;div role=&quot;region&quot;&gt;&lt;table&gt;
-&lt;tr&gt;
-&lt;th&gt;&lt;/th&gt;
-&lt;th&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;/th&gt;
-&lt;th&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;/th&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\;\; 1\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad 0\)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\;\; 0\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad 1\)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/table&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p pause&gt;&lt;span&gt;Essentially just sticking a &lt;/span&gt;\(1\)&lt;span&gt; where values are equal, and &lt;/span&gt;\(0\)&lt;span&gt; where they are not.&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span&gt;This is how semiringKanren accomplishes &lt;/span&gt;&lt;em&gt;&lt;span&gt;unification&lt;/span&gt;&lt;/em&gt;&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;code&gt;lefto&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;righto&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;pairo&lt;/code&gt;&lt;span&gt;, and &lt;/span&gt;&lt;code&gt;==&lt;/code&gt;&lt;span&gt; are implemented via unification; semiringKanren knows where to stick the &lt;/span&gt;\(1\)&lt;span&gt;s so the component types unify.&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;code&gt;=/=&lt;/code&gt;&lt;span&gt; is similar; just swap the &lt;/span&gt;\(1\)&lt;span&gt;s and &lt;/span&gt;\(0\)&lt;span&gt;s:&lt;/span&gt;&lt;/p&gt;
-&lt;div style=&quot;float:right&quot;&gt;
+&lt;div pause&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span style=&quot;float:left&quot;&gt;&lt;code&gt;(=/= x y)&lt;/code&gt;&lt;/span&gt;&lt;/p&gt;
 \[
 \begin{bmatrix}
-[0, 1], \\
-[1, 0]
+0 &amp;amp; 1 &amp;amp; 1 \\
+1 &amp;amp; \ddots &amp;amp; 1 \\
+1 &amp;amp; 1 &amp;amp; 0
 \end{bmatrix}
 \]
-&lt;/div&gt;
-&lt;div style=&quot;float:none&quot;&gt;
-&lt;div role=&quot;region&quot;&gt;&lt;table&gt;
-&lt;tr&gt;
-&lt;th&gt;&lt;/th&gt;
-&lt;th&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;/th&gt;
-&lt;th&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;/th&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\;\; 0\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad 1\)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\;\; 1\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad 0\)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/table&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p pause&gt;&lt;span&gt;Relation application is also powered by unification; it unifies the argument variables with the corresponding dimensions of the relation array.&lt;/span&gt;
-&lt;br /&gt;&lt;/p&gt;
-&lt;p pause center-at-unpause=&quot;factored-trilean&quot;&gt;&lt;code&gt;factor&lt;/code&gt;&lt;span&gt; fills an array with the corresponding value:&lt;/span&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&quot;factored-trilean&quot; class=&quot;example&quot; title=&quot;Factored trilean&quot;&gt;
-&lt;pre&gt;&lt;code&gt;(defrel (factored-trilean (b : (Sum Unit Unit)) (t : (Sum Unit (Sum Unit Unit))))
-    (factor 120))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;div pause style=&quot;float:right&quot;&gt;
+&lt;div pause center-at-unpause&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span style=&quot;float:left&quot;&gt;&lt;code&gt;(lefto y x)&lt;/code&gt;&lt;/span&gt;&lt;/p&gt;
 \[
 \begin{bmatrix}
-[120, 120, 120], \\
-[120, 120, 120]
+    \begin{matrix}
+        1 &amp;amp; 0 \\
+        0 &amp;amp; 1 \\
+    \end{matrix} &amp;amp;&amp;amp;
+    \begin{matrix} \huge{0} &amp;amp; &amp;amp; \end{matrix}
 \end{bmatrix}
 \]
-&lt;/div&gt;
-&lt;div style=&quot;float:none&quot;&gt;
-&lt;div role=&quot;region&quot;&gt;&lt;table&gt;
-&lt;tr&gt;
-&lt;th&gt;&lt;/th&gt;
-&lt;th&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;/th&gt;
-&lt;th&gt;&lt;code&gt;(right (left sole))&lt;/code&gt;&lt;/th&gt;
-&lt;th&gt;&lt;code&gt;(right (right sole))&lt;/code&gt;&lt;/th&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\; 120\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad\quad\; 120\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad\quad\; 120\)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\; 120\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad\quad\; 120\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad\quad\; 120\)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/table&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;div&gt;
-&lt;p pause&gt;&lt;code&gt;succeed&lt;/code&gt;&lt;span&gt; is just &lt;/span&gt;&lt;code&gt;(factor 1)&lt;/code&gt;&lt;span&gt;, and &lt;/span&gt;&lt;code&gt;fail&lt;/code&gt;&lt;span&gt; is &lt;/span&gt;&lt;code&gt;(factor 0)&lt;/code&gt;&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;sole&lt;/code&gt;&lt;span&gt; is the only &lt;/span&gt;&lt;code&gt;Unit&lt;/code&gt;&lt;span&gt;-typed value, so &lt;/span&gt;&lt;code&gt;soleo&lt;/code&gt;&lt;span&gt; is guaranteed to succeed; it becomes &lt;/span&gt;&lt;code&gt;(factor 1)&lt;/code&gt;&lt;span&gt; as well!&lt;/span&gt;&lt;/p&gt;
-&lt;div up-at-unpause pause&gt;
-&lt;h2 id=&quot;goals-which-combine-other-goals-1&quot;&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#goals-which-combine-other-goals-1&quot;&gt;&lt;/a&gt;&lt;span&gt;Goals which combine other goals&lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;span style=&quot;float:left&quot;&gt;&lt;code&gt;(righto y x)&lt;/code&gt;&lt;/span&gt;&lt;/p&gt;
+\[
+\begin{bmatrix}
+    \begin{matrix} &amp;amp; &amp;amp; \huge{0} \end{matrix}&amp;amp;&amp;amp;
+    \begin{matrix}
+        1 &amp;amp; 0 \\
+        0 &amp;amp; 1 \\
+    \end{matrix}
+\end{bmatrix}
+\]
+&lt;p pause center-at-unpause&gt;&lt;span style=&quot;float:left&quot;&gt;&lt;code&gt;(pairo y x _)&lt;/code&gt;&lt;/span&gt;&lt;/p&gt;
+\[
+\begin{bmatrix}
+1 &amp;amp; 1 &amp;amp; 0 &amp;amp; 0 \\
+0 &amp;amp; 0 &amp;amp; 1 &amp;amp; 1
+\end{bmatrix}
+\]
+&lt;p&gt;&lt;span style=&quot;float:left&quot;&gt;&lt;code&gt;(pairo y _ x)&lt;/code&gt;&lt;/span&gt;&lt;/p&gt;
+\[
+\begin{bmatrix}
+1 &amp;amp; 0 &amp;amp; 1 &amp;amp; 0 \\
+0 &amp;amp; 1 &amp;amp; 0 &amp;amp; 1
+\end{bmatrix}
+\]
+&lt;p pause center-at-unpause&gt;&lt;span style=&quot;float:left&quot;&gt;&lt;code&gt;(factor 120)&lt;/code&gt;&lt;/span&gt;&lt;/p&gt;
+\[
+\begin{bmatrix}
+120 &amp;amp; 120 &amp;amp; 120 \\
+120 &amp;amp; \ddots &amp;amp; 120 \\
+120 &amp;amp; 120 &amp;amp; 120
+\end{bmatrix}
+\]
+&lt;div pause&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;succeed&lt;/code&gt;&lt;span&gt; is &lt;/span&gt;&lt;code&gt;(factor 1)&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;fail&lt;/code&gt;&lt;span&gt; is &lt;/span&gt;&lt;code&gt;(factor 0)&lt;/code&gt;&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
+&lt;div pause&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span&gt;Relation application unifies argument variables with precalculated relation array variables.&lt;/span&gt;&lt;/p&gt;
+&lt;div id=&quot;goal-combinators-2&quot; center-at-unpause pause&gt;
+&lt;h2 id=&quot;goal-combinators-1&quot;&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#goal-combinators-1&quot;&gt;&lt;/a&gt;&lt;span&gt;Goal combinators&lt;/span&gt;&lt;/h2&gt;
 &lt;p&gt;&lt;code&gt;conj&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;disj&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;fresh&lt;/code&gt;&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
 &lt;/div&gt;
-&lt;p pause&gt;&lt;code&gt;conj&lt;/code&gt;&lt;span&gt; is handled by semiring multiplication of the arrays returned by it's arguments.&lt;/span&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;example&quot; title=&quot;Left x and y&quot; pause&gt;
-&lt;p&gt;&lt;span&gt;Here using the usual semiring on &lt;/span&gt;\(\mathbb{R}\)&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(defrel (x-is-left ((x : (Sum Unit Unit)) (y : (Sum Unit Unit)))
-    (fresh (u : Unit)
-        (lefto x u)))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;div style=&quot;float:right&quot;&gt;
+&lt;div pause up-at-unpause=&quot;goal-combinators-2&quot;&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;conj&lt;/code&gt;&lt;span&gt; uses semiring multiplication:&lt;/span&gt;&lt;/p&gt;
 \[
+(\text{conj}\;
 \begin{bmatrix}
-[1, 1], \\
-[0, 0]
+2 &amp;amp; 2 &amp;amp; 2 \\
+1 &amp;amp; 1 &amp;amp; 1 \\
+0 &amp;amp; 0 &amp;amp; 0
+\end{bmatrix}
+\;
+\begin{bmatrix}
+0 &amp;amp; 1 &amp;amp; 2 \\
+0 &amp;amp; 1 &amp;amp; 2 \\
+0 &amp;amp; 1 &amp;amp; 2
+\end{bmatrix})
+\leadsto
+\begin{bmatrix}
+0 &amp;amp; 2 &amp;amp; 4 \\
+0 &amp;amp; 1 &amp;amp; 2 \\
+0 &amp;amp; 0 &amp;amp; 0
 \end{bmatrix}
 \]
-&lt;/div&gt;
-&lt;div style=&quot;float:none&quot;&gt;
-&lt;div role=&quot;region&quot;&gt;&lt;table&gt;
-&lt;tr&gt;
-&lt;th&gt;&lt;/th&gt;
-&lt;th&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;/th&gt;
-&lt;th&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;/th&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\;\; 1\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad 1\)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\;\; 0\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad 0\)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/table&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;pre pause&gt;&lt;code&gt;(defrel (y-is-left ((x : (Sum Unit Unit)) (y : (Sum Unit Unit))))
-    (fresh (u : Unit)
-        (lefto y u)))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;div style=&quot;float:right&quot;&gt;
+&lt;div pause&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;disj&lt;/code&gt;&lt;span&gt; uses semiring addition:&lt;/span&gt;&lt;/p&gt;
 \[
+(\text{disj}\;
 \begin{bmatrix}
-[1, 0], \\
-[1, 0]
+2 &amp;amp; 2 &amp;amp; 2 \\
+1 &amp;amp; 1 &amp;amp; 1 \\
+0 &amp;amp; 0 &amp;amp; 0
+\end{bmatrix}
+\;
+\begin{bmatrix}
+0 &amp;amp; 1 &amp;amp; 2 \\
+0 &amp;amp; 1 &amp;amp; 2 \\
+0 &amp;amp; 1 &amp;amp; 2
+\end{bmatrix})
+\leadsto
+\begin{bmatrix}
+2 &amp;amp; 3 &amp;amp; 4 \\
+1 &amp;amp; 2 &amp;amp; 3 \\
+0 &amp;amp; 1 &amp;amp; 2
 \end{bmatrix}
 \]
-&lt;/div&gt;
-&lt;div id=&quot;y-is-left-result&quot; style=&quot;float:none&quot;&gt;
-&lt;div role=&quot;region&quot;&gt;&lt;table&gt;
-&lt;tr&gt;
-&lt;th&gt;&lt;/th&gt;
-&lt;th&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;/th&gt;
-&lt;th&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;/th&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\;\; 1\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad 0\)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\;\; 1\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad 0\)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/table&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;pre pause down-at-unpause=&quot;x-and-y-are-left-result&quot;&gt;&lt;code&gt;(defrel (x-and-y-are-left ((x : (Sum Unit Unit)) (y : (Sum Unit Unit))))
-    (conj
-        (x-is-left x y)
-        (y-is-left x y)))
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p pause center-at-unpause&gt;&lt;code&gt;fresh&lt;/code&gt;&lt;span&gt; uses summation:&lt;/span&gt;&lt;/p&gt;
 \[
+(\text{fresh}\;(x:\dots)\;
 \begin{bmatrix}
-[1, 1], \\
-[0, 0]
-\end{bmatrix}
-*
+0 &amp;amp; 1 &amp;amp; 2 \\
+0 &amp;amp; 1 &amp;amp; 2 \\
+0 &amp;amp; 1 &amp;amp; 2
+\end{bmatrix})
+\leadsto
 \begin{bmatrix}
-[1, 0], \\
-[1, 0]
-\end{bmatrix}
-=
-\begin{bmatrix}
-[1 * 1, 1 * 0], \\
-[0 * 1, 0 * 0]
-\end{bmatrix}
-= 
-\begin{bmatrix}
-[1, 0], \\
-[0, 0]
+0 &amp;amp; 3 &amp;amp; 6
 \end{bmatrix}
 \]
-&lt;div role=&quot;region&quot;&gt;&lt;table&gt;
-&lt;tr&gt;
-&lt;th&gt;&lt;/th&gt;
-&lt;th&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;/th&gt;
-&lt;th&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;/th&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\;\; 1\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad 0\)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\;\; 0\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad 0\)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/table&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p id=&quot;x-and-y-are-left-result&quot; pause center-at-unpause=&quot;example-left-x-or-y&quot;&gt;&lt;span&gt;Similarly, &lt;/span&gt;&lt;code&gt;disj&lt;/code&gt;&lt;span&gt; is handled by semiring addition.&lt;/span&gt;&lt;/p&gt;
-&lt;div id=&quot;example-left-x-or-y&quot; class=&quot;example&quot; title=&quot;Left x or y&quot;&gt;
-&lt;pre&gt;&lt;code&gt;(defrel (x-or-y-is-left  (x : (Sum Unit Unit)) (y : (Sum Unit Unit)))
-    (disj
-        (x-is-left x y)
-        (y-is-left x y)))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;div pause&gt;
-\[
-\begin{bmatrix}
-[1, 1], \\
-[0, 0]
-\end{bmatrix}
-+
-\begin{bmatrix}
-[1, 0], \\
-[1, 0]
-\end{bmatrix}
-=
-\begin{bmatrix}
-[1 + 1, 1 + 0], \\
-[0 + 1, 0 * 0]
-\end{bmatrix}
-= 
-\begin{bmatrix}
-[2, 1], \\
-[1, 0]
-\end{bmatrix}
-\]
-&lt;/div&gt;
-&lt;div role=&quot;region&quot;&gt;&lt;table&gt;
-&lt;tr&gt;
-&lt;th&gt;&lt;/th&gt;
-&lt;th&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;/th&gt;
-&lt;th&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;/th&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\;\; 2\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad 1\)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\;\; 1\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad 0\)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/table&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p pause center-at-unpause&gt;&lt;code&gt;fresh&lt;/code&gt;&lt;span&gt; introduces a new variable (array dimension), then reduces it by semiring addition.&lt;/span&gt;
-&lt;span&gt;It can be thought of as a disjunction over all the values of the new variable's type.&lt;/span&gt;&lt;/p&gt;
-&lt;div class=&quot;example&quot; title=&quot;Left y&quot; center-at-unpause pause&gt;
-&lt;pre&gt;&lt;code&gt;(defrel (just-y-is-left (y : (Sum Unit Unit)))
-    (fresh (x : (Sum Unit Unit))
-        (y-is-left x y)))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p pause&gt;&lt;span&gt;Remember how the dimensions are assigned:&lt;/span&gt;&lt;/p&gt;
-\[
-\begin{matrix}
-    \quad \; \; y \rightarrow \\
-    x \downarrow
-    \begin{bmatrix}
-        [a, b], \\
-        [c, d] \\
-    \end{bmatrix}
-\end{matrix}
-\]
-&lt;p pause&gt;&lt;span&gt;It follows:&lt;/span&gt;&lt;/p&gt;
-\[
-\sum_x
-\begin{bmatrix}
-[1, 0], \\
-[1, 0]
-\end{bmatrix}
-= [1 + 1, 0 + 0] = [2, 0]
-\]
-&lt;div role=&quot;region&quot;&gt;&lt;table&gt;
-&lt;tr&gt;
-&lt;th&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;/th&gt;
-&lt;th&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;/th&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;\(\quad\quad\;\; 2\)&lt;/td&gt;
-&lt;td&gt;\(\quad\quad\quad 0\)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/table&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;div&gt;
 &lt;div&gt;
 &lt;h2 id=&quot;what-about-recursion&quot; pause center-at-unpause&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#what-about-recursion&quot;&gt;&lt;/a&gt;&lt;span&gt;What about recursion?&lt;/span&gt;&lt;/h2&gt;
-&lt;p pause up-at-unpause=&quot;what-about-recursion&quot;&gt;&lt;span&gt;Recall that relation application requires the applied relation to have an array.&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;span&gt;What if that array does not exist yet?&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;em&gt;&lt;span&gt;Assume it fails.&lt;/span&gt;&lt;/em&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;span&gt;This can already handle some programs with certain semirings.&lt;/span&gt;&lt;/p&gt;
+&lt;p pause up-at-unpause=&quot;what-about-recursion&quot;&gt;&lt;span&gt;Assume relations &lt;/span&gt;&lt;em&gt;&lt;span&gt;fail&lt;/span&gt;&lt;/em&gt;&lt;span&gt; until we have more information.&lt;/span&gt;&lt;/p&gt;
+&lt;p pause&gt;&lt;span&gt;Recompute once we have the information.&lt;/span&gt;&lt;/p&gt;
+&lt;p pause&gt;&lt;span&gt;Repeat until there's no new information - program execution by &lt;/span&gt;&lt;em&gt;&lt;span&gt;fixpoint&lt;/span&gt;&lt;/em&gt;&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
 &lt;/div&gt;
-&lt;div class=&quot;example&quot; title=&quot;Succeed or recurse 1&quot;&gt;
-&lt;pre&gt;&lt;code&gt;(defrel (succeed-or-recurse)
-    (disj
-        (succeed)
-        (succeed-or-recurse)))
+&lt;div class=&quot;example&quot; title=&quot;Transitive closure step-by-step&quot;&gt;
+&lt;p&gt;&lt;span&gt;Recall transitive closure example with &lt;/span&gt;\((\mathbb{R}^\infty,\min,+)\)&lt;span&gt;: &lt;/span&gt;&lt;span style=&quot;float:right&quot;&gt;&lt;img src=&quot;data:image/jpeg;base64,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&quot; alt=&quot;&quot; &gt;&lt;/span&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;(defrel (connecto (x : Num) (y : Num))
+  (disj
+    (grapho x y)
+    (fresh ((z : Num))
+      (conj
+        (connecto x z)
+        (connecto z y)))))
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p pause&gt;&lt;span&gt;becomes:&lt;/span&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(defrel (succeed-or-recurse)
-    (disj
-        (succeed)
-        (fail)))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p pause center-at-unpause&gt;&lt;span&gt;which is equivalent to:&lt;/span&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(defrel (succeed-or-recurse)
-    (succeed))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;span&gt;A relation over no variables is a 0-dimensional array, so evaluates to the scalar of the semiring's value for &amp;quot;&lt;/span&gt;\(1\)&lt;span&gt;&amp;quot;.&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span&gt;Which may already be correct depending on the semiring: e.g. &lt;/span&gt;\(\top\)&lt;span&gt; for the boolean semiring, or &lt;/span&gt;\(0\)&lt;span&gt; for the min-tropical semiring.&lt;/span&gt;&lt;/p&gt;
+&lt;p pause center-at-unpause&gt;&lt;span&gt;First assume nothing: &lt;/span&gt;&lt;span style=&quot;float:right&quot;&gt;&lt;img src=&quot;data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/wAALCABOAj0BAREA/8QAHQABAAEEAwEAAAAAAAAAAAAAAAYEBQcIAQIJA//EAEkQAAEDAwIDBAYFBwcNAAAAAAEAAgMEBQYHEQgSMRMhQVEJFGFxgZEVIiMyoRZCUlRikrIlM1Nyc3WCFxgmNDU2N0NjdKKxs//aAAgBAQAAPwD1TRERERERcOc1jS5zgGgbkk7ABRXINVtNsXjfJfM5slM5nWJ1dEZT7mA8x+SgFfxh6C27ftcorZeX9XtNVN/BGVZzxw6IVBMdp/KmukB2IbjVcwD4uiAQccuhMJDLjLlNJIfzXYxXuHzbEQr5Y+LzQe/1LKWlyqqp3v6GutlTStHvdKxoCydZswxLIgDYMntNy5huBSVscp+TSVeEREREREREXznngponT1M0cUbe9z3uDWj3kqF5HrdpPirCbvntmDwdjDBVsmlH+BhLvwUHr+M3QK3b9rkd0l2/V7JWTfwRlW0cb+jFT9e102V1kY+88Y5WxgfB0QJXLOObQLnENVXZPTy+LZMYuGw+Ii2Uoxnim0PyucU9BmTaVx7t7jTS0TfnM1oWSrVkFhvsfa2S90FwZtvzUtSyUbe9pKr0REREREREVpu+W4rj+/09k1qtu3hV1kcP8RCxjfuLrQjHql1LV5VU1L2dXUNtqKph9zomOBVgHHPoRO50dulyqrkb3bNxivaPm6IBc/58OiVMQy7tyqhc7oHY3XSA/FsR2V4oOMPQW4bdlk9dFzfrFpqof44wp9j+rGmuURMlsmc2SodJ0iFdGJR72E8w+SlbXNe0PY4OaRuCDuCFyiIiIiIiIiIiIi4JAG5WMM74ktJMCqH2ysyNt1vDO76ItDRV1xP9iw8yg7dQOJnVfZunmEUuB2aU/Z3m+gS1ex86JwaR+8uzOFvKsocJtVNdsuujz3vZZKuS1QvPkWMc4bexSuwcKuhNieypmwG33msj721l3ibV1APnzvG+6yBb8JxC1AC24zbaUDp2VM1u3yCvTWtY0MY0NaO4ADuCOa17S17QQeoKsV7wLCskgdTX/FbXcIn9zmVNKyQH4EKAXHhY0encX49ZqnE3n8/HKg292/n9mOqtE2mWuun4MmmOpYvdsg+s20ZBH29RN7PXHu3b+6qen4nbrh9Yy2a6aZ3XEnudym40gdXW2MfpSVIa1rB71mew5TjuVWdl/wAZvNJdLfK0vjqKSUSMePYQqTDc5xzO6Gorser2VAoqh1JVR7/XgmbsSx48DsQdvapAiIiIuk00VPE+eeRsccYLnOcdgB5krDuX8VulWPVT7RjtXWZjd2ksNDjlOa+SN/lJ2ZPJ7Seijra/iz1V+va6azaXWl43ZNUsbc6qdntjPIYnEfJfSDhKbfJRWak6v5xfJ+roaS7S0dI/3wgkEexTXHeGjQvGXtqKDTSxy1g61tTRxy1DvfIRuVOaDFcatW30bYqGm5enZQNbt8grr0XSWGKdhjmja9p8HDcKM5DpZptlsRgyfBbJdIz1bV0Ucg/EKDV3Cvpi53NjU9+xQA7tjx+5PoYx7OVg229itcuNcTGnP2uKZNbM8tkPdFabkxtJUBv7VWS4vPwXex8VFhoLkzHtXsYueBXJzuQz3CI/Rrn/AKLKsgNcfgswVeRWymsEmSQ1Daqhjh7cSwHnD2eYI6jZcYxk1kzKw0eTY5XxVttuEfa088TgWvbuRuCPaCroiIiKwZlnGO4JQ0tfkVeymZXVkNvpQT3y1Ep5Y2D2kqrvuTWHFrQ++5Pd6S1UMLQ6WerlEbGe8lYWqeJ+45fWPtehmmt1y6RruUXCpDqK2v8AaypLXNePcqmDTbXnUAiXUvUhlhtk3e6z2GPsp4fZ64xwLv3VeLfwtaQQ9+Q2iryx3XmyOpNwO/vkCntkwDCMagbS4/idqt0LPuspqVkbR8AFfmtaxoaxoaB0ACOa17S1zQQe4g+KstwwrELruLljVtqubr2tM12/zCgN/wCFfQm/SPqo8At1orZNy6ttMTaSoP8AjYN1E38LOTYw8z6W66Zfa5B3sjvVZJdIWnyDHuaNvYur874m9KDy59htHn9miP2l5sYEFVt7KJocXfvKbYLxKaS55UR2umyH6IvEhAFovLRR12/l2LzzLKAII3B3BXKIiIiIiIvnNPDTxmWomZExvVz3BoHxKo6LILDcZXQUF6oamRh5SyKoY5wPuBVwRYy1N1/wnTatZjrxV3vJ6hvNS2G2R9pVz+4HZoHvKgZwXXjXX7XUm9/kJik43FitTiayqj3+7UyEB0Tv7NyyhgeiWmGm1OyHFcSo4pWd4qqhvrFST7ZpN3/ipyiIiIiKmuFtt92pJKC60FPWUso2khqImyMePItcCCtOuI3HdOeG1tTqFpxqXcMEyCVpm+h6dj6qmuX/AE+ycHMiB82ALS7g745Mqw/icvtzzq1VVFi2o9y562njhkMVFVO2a2SPcfnENB3817NwTxVMLKiB4fHI0OY4dCD0K+i4JAG5PcqeluNBXOkZRVsE5hPLIIpA7lPkduiqUWG864lMfs16mwjT6y1+a5ZGezkt1sj5hSO6B07jsGsHjtue5R2LQ3UvWGVt04gsvdTWwu548VsUz4qZvkX1A5ZS7bq3fbqsw4fpvg2BUkdJiWL2+3BjeXtYoG9s8ftSbczj7SVJURERERWrJMVxzL7bJaMmstHcqSQEGKphbIBv4jcdx9o71obxK5XjnB7FcKjRvUm4moqGPFTg9THJV08we0gkSvDnxjv7g07LFnosOLa42nIKnh/z6Otit9znkqcfnniftDITzOgJI7m7A7e0r1aRU9ZX0NviM1fWwU0Y/OlkDB8yulFdbXcmCS3XGmqmuG4MMrX7j4FVa+c80VNDJUTvDI4ml73Ho1oG5PyXjXxrcbWQ5rxIWZmF22uqcX04uQno2di8R1dfE8faOAHe0OaCD5Fbi8Odk074nDT6gal6lXDN8gY0TmxTxvpaW2nrydkwNbKB+2CtybbbLbZ6OO3Wmgp6KliG0cNPE2NjR7GtAAVUiIiIiKEZ5otplqRTSQZXidHPJL1qoG9hUj3TR7PHzWLfyA110Md2+l9+GbYtF3usF3cRU0sX6NPKN3Su/ruU60z4gsK1Gr3Y1JHWWDKYQTUWG6R9nVxbdTsN2kdehWT0VNW3O3W1na3GvpqVgG/NNK1g/ErihutsucYlt1xpqphG4MMrXj8CqpERERedvFjqTlevfF3iPB7jF/rbbjIJqsiNG/kfUlgc90Lz+hsweXVXTjO4aMW4fNLqTXThts78XyrC6qCaR1LNIY6ym33k7YOcebub4bdStrOGXWOn160SxjU+FgY+60u07R4TMJZJ3eH1mlZSVqpsVx2jvFTkFPZqVlyrA1s9VybyPDfujc9Ntz0V1RERERERF8KigoavY1dHBNt07SMO2+at9TiOK1hBqsctshB3BNKzcH37K6RRRwRthiYGsYA1rR0AXda/8Qel2sOVw3y+Y5rbc8VsdJaKiUUds+rM57I3O73EEbHYBa6+iDrrnX4VntRdrnU19S68kyT1Ehe97uZ+5O/mvQpcEAjY+KtllxfHsdNQ6yWelo3VUz6iZ0bNnSSOO7nE9e8q6IiIiIiIipZ7Zbap/aVNvppnfpSRNcfxCon4jiz6llYcet4njPMyRtO1rmnzBAV3XSWQRRPlPRjS4/BecWH5nh3GdxaZvppq/drpLZ8YldT2DH4XujpZQw7ull27+fbcdR0ChXGFgd+9H3m+Ma08PuQXChsFwqDDcbDLO59N3Fv1QD4O3PivTHTnL6fPsEsOY0xby3e3wVTg3o172AuaPcSQpFJGyWN0UjQ5jwWuB6EHqFaqXEMVoiTS45bYyepFMzc/HZV9PQUNISaSighJ69nGG/8AoKoRERERERFaqrFsdrbxR5BVWelkuVAXGnquTaSMuGx2I67g7d6uq6yOLI3Pa3mLWkgea84NOI8i4meM7ULEOILALzdcSspMdmpKxskVDSNB6gjbnJ9hPVY+1wlufBpxvYdZtCblPbMbymaihrMdjmc+EiR4a8AOJI5ubu716u0kzqilhqHxmN0sbXlh6tJG+y+qIiIvLvQ2pfd/Syalz1RO9DVzxQh3UN7Lp+K3Z40IYpuF3UcS7bNsNW4b+YjdssJeiSrqip4VqOml5uSlrpmx79Ni9xO3xW7CIiIiIiIiIiIo9qL/AMPsn/uat/8Ag9aI+h7/ANx88/vg/wAT16HoiIiIiIiIiIi4IDgQRuD3EKDY3ohpXiOaXLULHcKtlDkF2/1uuiga2SQ+e4G68/vSEXi78WetuK8KukYfXm0VHbZBXQM7SGk5i37xHcCzZ24Xozp5iFLgOD2PDaPlMdooIKQuA2D3MYA53xIJ+KkSIiIiIiIiIiIoBq3eNV8es0VXo5p7asnu1Q9zJ4666NoGxM5fqv5i13Od/Bed2mFPZrzxvnJeNqudaNQg6P8AJq0vh/kxnKfsSyoOzXv6bbDvXqe0hwDmkEEbgjxXKIiIvL6ppm6IelnFyvs7KW35+yWtE0nc368b2sG/9ZoHxC2m9I1nlBgXCfl1TWvbvdo22qJu/eXzBzRsPFUfo0cIuWEcJWJ094pHU1bX9vVvjcNiGulcWE+9pBW06IiIiIiIiIiIo3qRNFHp/k4klYz+Rq37zgP+Q9aI+h8mhGE540zRg/TBO3MN/vP8F6JIiIiIiIiIiIiLVHi14pYsYu1JoHprkdupM2yNhZU19RKBDZ6U/elee/ZxAcGjbrsrJgV74aeEHR3IsixrOrJkGWx0E1xr6+eo5qm6VgYXcvN3kBzvAea2g0vyi6Ztp/YstvFBHRVV3ooqx0EZJawSNDgO/v6EKUoiIiIiIiIiIqC/XCW02SvukNO6eSkppJmxt6vLWkgfgtOeATjI1X4o8szagzXC6S22eyd9JV0znECXtOUwnfxDdj8Vrh6ZKvjk1O0yosTjecnpmzP3pxvMXF0Zh22799wdl6e6YOurtN8WdewRXmzUZqd+vadi3m39u/VSdEREWF+I3hV084kqK1uyeWttd4sdQ2qtt3tzmsqqeRp3bs4g9246LHWQcENx1Tulk/y66uXvLrHj8rZqe1veBFUOaRsZxy/WPd37bLaS3W6itFvprXbaZlPS0kTIIYmDZrGNGzQPcAqlaucVXHZZOE7JbfZsy0uv9xt10i56W7UlRE2F7gBzM2I3BG469V8NCuPS18Qta2lwDRzKpYg4NkqZnMZDHv485AB+BW1DCXMa5zeUkAkeXsXZERERERfOoqKekhfU1U8cMMY5nySODWtHmSe4BYIzni5xG2Xs4VpbY6/ULKC/k9TtH8xH+06pI7Lu8ubdZrx+ruddY6CtvVu9Qr56dklTS84d2MhG7mbjuOx7twrgsE67cKVv14uzq+76tZ3YaOSk9Tlttmro4aaRu53c5rmOO5B269FiLBPRc6aaYTTz6e60am2CSp27Y0dygZz7dNx2W3itybXRG22yktzqqaqNLBHAZ5iDJLytA53EdXHbc+0qqRERERERERERdZGdpG5nMRzAjcdQtJc89E7oXqLml2zzIM9zt10vFQ6pqHMrodg4+A3j3A9issXocOHNkrJJc3zyZrHBxjfXwlrtvA/Z9FvRYrRS4/ZLfYaHm9WttLFRw83XkjYGt39uwCrkREREREREREXV7GyMdG9oc1wIIPiCtbr5wb09ly245roZqNe9O6u8P7S4UFtc0UVVJvuXvYWk83TofBUeB8CmHW7VBmtmrGWXfUHMY2tEM11e18FMW/cMbQ0EcvhutngA0BrQAB3ABcoiIiIiLC/Fnw62DiW0fu2CXKnjFyEZntVSQA6GpaCWd/g0nbceKwtw08OmeY5oxj98wbM7niOXUnb0tdRVYdPbqgxSuYD6sSGtLg0EO8isrUXEXkmCVLbHrzp9cbJMDysu9sjdWW+Rv9JJI0BsO/kd9llvEc/wrPqI3DC8ptt6p2/ekoqhsoafI8p7ipAiIiIrLlOZ4nhFudd8wyO32aibvvPW1DYmfNxWDb1xkWa8VTrNolgV/wA/r9y1lTS0z47YT4b1YDmgfBWyHQ3XPXGoZc+ILOZcfsZdzMxXHagxfU68s1SwjtR5gtWd8B0zwTTC0NsmCYxQWelAHOKaFrDIf0nkD6x9pUoREREREREREREREREREREREREREREREREREREREXVkccTeSNjWN332aNgvlWUNFcad9HcKOCqgkGz4pow9jh7Qe4rE+WcLumGQ1303ZqSqxq7x98FVaKh9OyN3mYWOEbviFHn4DxV4YS7FNVrXmcbP5uHIqZtINvBpdAwn2br5u1v4g8P+pn3DxcL25vc52HO9ab7x2zmdy7M4t5IxvdNANTbbt19Zt0I2+UpX0PGJiHLs3AswdN/Qihbz/wAS+EnF3K//AGbw+6n3Hfp6vbYTv85QqCTiC4jMpkMeA8Md4tW52ZJlh9WZ7z2Lndy5/IzjUzM/6Q6kYzg7JOox+H11zAfAesR9VcsX4MdO6W4tyHUe9XnPb4HBzqu61L2wuP8A2zXdl/4rOVnsNjx6kFDYbPRW2mbttFSU7ImfJoAVeiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIi6Oiif9+Jjve0FdPUqPff1SHfz7MLu2KJn3ImN9zQF3RERERERERERERERERERERERERERERERERERERf/9k=&quot; alt=&quot;&quot; &gt;&lt;/span&gt;
+&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+\[
+\begin{bmatrix}
+\infty &amp;amp; \infty &amp;amp; \infty &amp;amp; \infty \\
+\infty &amp;amp; \infty &amp;amp; \infty &amp;amp; \infty \\
+\infty &amp;amp; \infty &amp;amp; \infty &amp;amp; \infty \\
+\infty &amp;amp; \infty &amp;amp; \infty &amp;amp; \infty \\
+\end{bmatrix}
+\]
+&lt;p pause center-at-unpause&gt;&lt;code&gt;connecto&lt;/code&gt;&lt;span&gt; calls fail, but &lt;/span&gt;&lt;code&gt;grapho&lt;/code&gt;&lt;span&gt; calls do not:&lt;/span&gt;&lt;/p&gt;
+\[
+\begin{bmatrix}
+\infty &amp;amp; 1 &amp;amp; \infty &amp;amp; \infty \\
+1 &amp;amp; \infty &amp;amp; 1 &amp;amp; \infty \\
+\infty &amp;amp; \infty &amp;amp; \infty &amp;amp; \infty \\
+\infty &amp;amp; \infty &amp;amp; 1 &amp;amp; \infty \\
+\end{bmatrix}
+\]
+&lt;p pause center-at-unpause&gt;&lt;span&gt;Now we can consider intermediate vertices:&lt;/span&gt;&lt;/p&gt;
+\[
+\begin{bmatrix}
+2 &amp;amp; 1 &amp;amp; 2 &amp;amp; \infty \\
+1 &amp;amp; 2 &amp;amp; 1 &amp;amp; \infty \\
+\infty &amp;amp; \infty &amp;amp; \infty &amp;amp; \infty \\
+\infty &amp;amp; \infty &amp;amp; 1 &amp;amp; \infty \\
+\end{bmatrix}
+\]
+&lt;p&gt;&lt;span&gt;Re-evaluating &lt;/span&gt;&lt;code&gt;connecto&lt;/code&gt;&lt;span&gt; gets the same result. All done! &lt;/span&gt;&lt;span style=&quot;float:right&quot;&gt;&lt;img src=&quot;data:image/jpeg;base64,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&quot; alt=&quot;&quot; &gt;&lt;/span&gt;&lt;/p&gt;
 &lt;/div&gt;
-&lt;p pause center-at-unpause&gt;&lt;span&gt;Depending on the program and the semiring, this is likely not the correct answer.&lt;/span&gt;&lt;/p&gt;
-&lt;div class=&quot;example&quot; title=&quot;Succeed or recurse 2&quot;&gt;
-&lt;p&gt;&lt;span&gt;Translating the above program to a non-relational one that directly computes over the usual semiring on &lt;/span&gt;\(\mathbb{R}\)&lt;span&gt;:&lt;/span&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(define (succeed-or-recurse)
-    (+
-        1
-        (succeed-or-recurse)))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;span&gt;We would expect this to loop infinitely.&lt;/span&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;p pause center-at-unpause&gt;&lt;span&gt;We can try computing the relation again now that we have some value for it's recursive call.&lt;/span&gt;&lt;/p&gt;
-&lt;div class=&quot;example&quot; title=&quot;Succeed or recurse 3&quot; center-at-unpause pause&gt;
-&lt;p&gt;&lt;span&gt;Assuming the usual semiring on &lt;/span&gt;\(\mathbb{R}\)&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(defrel (succeed-or-recurse)
-    (disj
-        (succeed)
-        (succeed-or-recurse)))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p pause&gt;&lt;span&gt;Plugging in the value we calculated last time:&lt;/span&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(defrel (succeed-or-recurse)
-    (disj
-        (succeed)
-        (factor 1)))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p pause&gt;&lt;span&gt;Simplifying:&lt;/span&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(defrel (succeed-or-recurse)
-    (factor 2))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;span&gt;Which evaluates to &lt;/span&gt;\(2\)&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div&gt;
-&lt;p pause center-at-unpause&gt;&lt;span&gt;If we continue to repeat this process, we get &lt;/span&gt;\(3\)&lt;span&gt;, then &lt;/span&gt;\(4\)&lt;span&gt;, and so on... which seems to match the desired &amp;quot;infinite loop&amp;quot; behavior!&lt;/span&gt;&lt;/p&gt;
-&lt;h1 id=&quot;fixpoint-evaluation&quot; pause&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#fixpoint-evaluation&quot;&gt;&lt;/a&gt;&lt;span&gt;Program evaluation by fixpoint.&lt;/span&gt;&lt;/h1&gt;
-&lt;p pause up-at-unpause=&quot;fixpoint-evaluation&quot;&gt;&lt;span&gt;Start by assuming all relations fail, and generate the corresponding relation arrays.&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;span&gt;Compute new relation arrays, using the old ones for relation calls.&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;span&gt;Repeat until the relation arrays stop updating (find the fixpoint).&lt;/span&gt;&lt;/p&gt;
-&lt;br /&gt;
-&lt;p pause&gt;&lt;span&gt;This is &amp;quot;bottom-up evaluation&amp;quot;, similar to how Datalog works!&lt;/span&gt;&lt;/p&gt;
+&lt;div pause down-at-unpause&gt;
+&lt;p&gt;&lt;span&gt;This is &amp;quot;bottom-up evaluation&amp;quot;, similar to Datalog.&lt;/span&gt;
+&lt;br /&gt;&lt;span&gt; &lt;/span&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -2604,169 +2385,97 @@ Goals return relations!
 &lt;p pause&gt;&lt;span&gt;&amp;quot;Something about the fixpoint of meta-humor.&amp;quot;&lt;/span&gt;&lt;/p&gt;
 &lt;br /&gt;
 &lt;h2 id=&quot;compiling-adts-to-bitstrings&quot; pause up-at-unpause&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#compiling-adts-to-bitstrings&quot;&gt;&lt;/a&gt;&lt;span&gt;Compiling ADTs to bitstrings&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;span&gt;Instead of arbitrary sum types, what if we only have booleans?&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span&gt;(&lt;/span&gt;&lt;code&gt;Bool&lt;/code&gt;&lt;span&gt; can be though of as &lt;/span&gt;&lt;code&gt;(Sum Unit Unit)&lt;/code&gt;&lt;span&gt;, where &lt;/span&gt;&lt;code&gt;true&lt;/code&gt;&lt;span&gt; is &lt;/span&gt;&lt;code&gt;(left sole)&lt;/code&gt;&lt;span&gt; and &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; is &lt;/span&gt;&lt;code&gt;(right sole)&lt;/code&gt;&lt;span&gt;)&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;span&gt;Convert sum types to &lt;/span&gt;&lt;em&gt;&lt;span&gt;tagged unions&lt;/span&gt;&lt;/em&gt;&lt;span&gt;:&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span&gt;No arbitrary sum types, only booleans.&lt;/span&gt;&lt;/p&gt;
+&lt;div pause&gt;&lt;/div&gt;
 \[
 (\text{Sum}\;A\;B) \leadsto (\text{Prod}\;\text{Bool}\;\max(A', B'))
 \]
 &lt;p&gt;&lt;span&gt;Where &lt;/span&gt;&lt;code&gt;A'&lt;/code&gt;&lt;span&gt; and &lt;/span&gt;&lt;code&gt;B'&lt;/code&gt;&lt;span&gt; are the bitstring representations of &lt;/span&gt;&lt;code&gt;A&lt;/code&gt;&lt;span&gt; and &lt;/span&gt;&lt;code&gt;B&lt;/code&gt;&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span&gt;The first element of this pair is a &lt;/span&gt;&lt;code&gt;Bool&lt;/code&gt;&lt;span&gt;, which is &lt;/span&gt;&lt;code&gt;true&lt;/code&gt;&lt;span&gt; when the sum was a &lt;/span&gt;&lt;code&gt;left&lt;/code&gt;&lt;span&gt;, and &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; otherwise. The second element's type is whichever compiled component type of the original sum type is larger.&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;span&gt;Assuming &lt;/span&gt;\(|A'|&amp;gt;|B'|\)&lt;span&gt;:&lt;/span&gt;&lt;/p&gt;
+&lt;p pause&gt;&lt;span&gt;Assuming &lt;/span&gt;\(|B'|&amp;gt;|A'|\)&lt;span&gt;:&lt;/span&gt;&lt;/p&gt;
 \[
-(\text{left}\;x) \leadsto (\text{pair}\;\text{true}\;x')
+(\text{left}\;x) \leadsto (\text{pair}\;\text{true}\;\text{proj}_{B'}(x'))
 \]
 \[
-(\text{right}\;y) \leadsto (\text{pair}\;\text{false}\;\text{proj}_{A'}(y'))
+(\text{right}\;y) \leadsto (\text{pair}\;\text{false}\;y')
 \]
-&lt;p&gt;&lt;span&gt;Note that we need to coerce the smaller component type of the sum type into the larger component type.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span&gt;Smaller type is coerced into larger type.&lt;/span&gt;&lt;/p&gt;
 &lt;/div&gt;
-&lt;div class=&quot;example&quot; title=&quot;Quaternary values&quot; pause&gt;
-&lt;p&gt;&lt;span&gt;Aim to compile the type &lt;/span&gt;&lt;code&gt;(Sum Unit (Sum Unit (Sum Unit Unit)))&lt;/code&gt;&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;span&gt;Start with the innermost:&lt;/span&gt;&lt;/p&gt;
-\[
-(\text{Sum}\;\text{Unit}\;\text{Unit})\leadsto\text{Bool}
-\]
-&lt;p pause center-at-unpause&gt;&lt;span&gt;Stepping up, now we want to compile &lt;/span&gt;&lt;code&gt;(Sum Unit Bool)&lt;/code&gt;&lt;span&gt;. We either have &lt;/span&gt;&lt;code&gt;(left (sole : Unit))&lt;/code&gt;&lt;span&gt; or &lt;/span&gt;&lt;code&gt;(right (b : Bool))&lt;/code&gt;&lt;span&gt;. &lt;/span&gt;&lt;code&gt;Bool&lt;/code&gt;&lt;span&gt; is bigger than &lt;/span&gt;&lt;code&gt;Unit&lt;/code&gt;&lt;span&gt;, so we use it in the compiled type.&lt;/span&gt;&lt;/p&gt;
-\[
-(\text{Sum}\;\text{Unit}\;\text{Bool}) \leadsto (\text{Prod}\;\text{Bool}\;\text{Bool})
-\]
-&lt;p pause&gt;&lt;span&gt;One more step:&lt;/span&gt;&lt;/p&gt;
-\[
-(\text{Sum}\;\text{Unit}\;(\text{Prod}\;\text{Bool}\;\text{Bool})) \leadsto (\text{Prod}\;\text{Bool}\;(\text{Prod}\;\text{Bool}\;\text{Bool}))
-\]
-&lt;p pause center-at-unpause&gt;&lt;span&gt;Here's how the values compile. Note that &lt;/span&gt;&lt;code&gt;sole&lt;/code&gt;&lt;span&gt;s which are projected into a larger type get coerced into &lt;/span&gt;&lt;code&gt;true&lt;/code&gt;&lt;span&gt;s.&lt;/span&gt;&lt;/p&gt;
-\[
-(\text{left}\;\text{sole}) \leadsto (\text{pair}\;\text{true}\;(\text{pair}\;\text{true}\;\text{true}))
-\]
-\[
-(\text{right}\;(\text{left}\;\text{sole})) \leadsto (\text{pair}\;\text{false}\;(\text{pair}\;\text{true}\;\text{true}))
-\]
-\[
-(\text{right}\;(\text{right}\;(\text{left}\;\text{sole}))) \leadsto (\text{pair}\;\text{false}\;(\text{pair}\;\text{false}\;\text{true}))
-\]
-\[
-(\text{right}\;(\text{right}\;(\text{right}\;\text{sole}))) \leadsto (\text{pair}\;\text{false}\;(\text{pair}\;\text{false}\;\text{false}))
-\]
+&lt;div class=&quot;example&quot; unstatic-at-unpause=&quot;quat-2 quat-3 quat-4&quot; title=&quot;Quaternary values&quot; down-at-unpause pause&gt;
+&lt;div id=&quot;quat-1&quot;&gt;
+&lt;p&gt;&lt;span&gt;Nested sum type with four total values.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(Sum&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Unit&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(Sum&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Unit&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(Sum&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Unit&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Unit)))&lt;/code&gt;&lt;span&gt; &lt;/span&gt;\(\leadsto\)&lt;span&gt; &lt;/span&gt;&lt;code&gt;(Prod&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Bool&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(Prod&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Bool&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Bool))&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(left&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;sole)&lt;/code&gt;&lt;span&gt; &lt;/span&gt;\(\leadsto\)&lt;span&gt; &lt;/span&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;true&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;true&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;true))&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(left&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;sole))&lt;/code&gt;&lt;span&gt; &lt;/span&gt;\(\leadsto\)&lt;span&gt; &lt;/span&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;true&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;true))&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(left&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;sole)))&lt;/code&gt;&lt;span&gt; &lt;/span&gt;\(\leadsto\)&lt;span&gt; &lt;/span&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;true))&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;sole)))&lt;/code&gt;&lt;span&gt; &lt;/span&gt;\(\leadsto\)&lt;span&gt; &lt;/span&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;false))&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&quot;quat-2&quot; unstatic-at-unpause=&quot;quat-1&quot; static-at-unpause&gt;
+&lt;p&gt;&lt;span&gt;Start from the innermost type.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(Sum&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Unit&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(Sum&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Unit&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;(Sum&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Unit&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Unit)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;))&lt;/code&gt;&lt;span&gt; &lt;/span&gt;\(\leadsto\)&lt;span&gt; &lt;/span&gt;&lt;code&gt;(Prod&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Bool&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(Prod&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Bool&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;Bool&lt;/code&gt;&lt;/span&gt;&lt;code&gt;))&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(left&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;sole)&lt;/code&gt;&lt;span&gt; &lt;/span&gt;\(\leadsto\)&lt;span&gt; &lt;/span&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;true&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;true&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;true))&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(left&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;sole))&lt;/code&gt;&lt;span&gt; &lt;/span&gt;\(\leadsto\)&lt;span&gt; &lt;/span&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;true&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;true))&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;(left&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;sole)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;))&lt;/code&gt;&lt;span&gt; &lt;/span&gt;\(\leadsto\)&lt;span&gt; &lt;/span&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;true&lt;/code&gt;&lt;/span&gt;&lt;code&gt;))&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;sole)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;))&lt;/code&gt;&lt;span&gt; &lt;/span&gt;\(\leadsto\)&lt;span&gt; &lt;/span&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;false&lt;/code&gt;&lt;/span&gt;&lt;code&gt;))&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&quot;quat-3&quot; unstatic-at-unpause=&quot;quat-2&quot; static-at-unpause&gt;
+&lt;p&gt;&lt;span&gt;One level up.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(Sum&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Unit&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:hotpink&quot;&gt;&lt;code&gt;(Sum&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;Unit&lt;/code&gt;&lt;/span&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;(Sum&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Unit&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Unit)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;span&gt; &lt;/span&gt;\(\leadsto\)&lt;span&gt; &lt;/span&gt;&lt;code&gt;(Prod&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Bool&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:hotpink&quot;&gt;&lt;code&gt;(Prod&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Bool&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;Bool&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(left&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;sole)&lt;/code&gt;&lt;span&gt; &lt;/span&gt;\(\leadsto\)&lt;span&gt; &lt;/span&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;true&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;true&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;true))&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:hotpink&quot;&gt;&lt;code&gt;(left&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;sole&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;span&gt; &lt;/span&gt;\(\leadsto\)&lt;span&gt; &lt;/span&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:hotpink&quot;&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;true&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;true&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:hotpink&quot;&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;(left&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;sole)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;span&gt; &lt;/span&gt;\(\leadsto\)&lt;span&gt; &lt;/span&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:hotpink&quot;&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;true&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:hotpink&quot;&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;sole)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;span&gt; &lt;/span&gt;\(\leadsto\)&lt;span&gt; &lt;/span&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:hotpink&quot;&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;false&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&quot;quat-4&quot; unstatic-at-unpause=&quot;quat-3&quot; static-at-unpause&gt;
+&lt;p&gt;&lt;span&gt;The full type!&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;background-color:cyan&quot;&gt;&lt;code&gt;(Sum&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:hotpink&quot;&gt;&lt;code&gt;Unit&lt;/code&gt;&lt;/span&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:hotpink&quot;&gt;&lt;code&gt;(Sum&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;Unit&lt;/code&gt;&lt;/span&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;(Sum&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Unit&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Unit)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;span&gt; &lt;/span&gt;\(\leadsto\)&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:cyan&quot;&gt;&lt;code&gt;(Prod&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Bool&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:hotpink&quot;&gt;&lt;code&gt;(Prod&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;Bool&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;Bool&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;background-color:cyan&quot;&gt;&lt;code&gt;(left&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:hotpink&quot;&gt;&lt;code&gt;sole&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;span&gt; &lt;/span&gt;\(\leadsto\)&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:cyan&quot;&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;true&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:hotpink&quot;&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;true&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;true)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;background-color:cyan&quot;&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:hotpink&quot;&gt;&lt;code&gt;(left&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;sole&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;span&gt; &lt;/span&gt;\(\leadsto\)&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:cyan&quot;&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:hotpink&quot;&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;true&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;true&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;background-color:cyan&quot;&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:hotpink&quot;&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;(left&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;sole)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;span&gt; &lt;/span&gt;\(\leadsto\)&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:cyan&quot;&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:hotpink&quot;&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;true&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;background-color:cyan&quot;&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:hotpink&quot;&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;(right&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;sole)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;span&gt; &lt;/span&gt;\(\leadsto\)&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:cyan&quot;&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:hotpink&quot;&gt;&lt;code&gt;(pair&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;code&gt;false&lt;/code&gt;&lt;span&gt; &lt;/span&gt;&lt;span style=&quot;background-color:orange&quot;&gt;&lt;code&gt;false&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;code&gt;)&lt;/code&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
 &lt;/div&gt;
 &lt;div&gt;
-&lt;p pause center-at-unpause&gt;&lt;code&gt;(Sum Unit (Sum Unit (Sum Unit Unit)))&lt;/code&gt;&lt;span&gt; has four values.&lt;/span&gt;&lt;/p&gt;
+&lt;div down-at-unpause pause&gt;
+&lt;p&gt;&lt;code&gt;(Sum Unit (Sum Unit (Sum Unit Unit)))&lt;/code&gt;&lt;span&gt; has four values.&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;(Prod Bool (Prod Bool Bool))&lt;/code&gt;&lt;span&gt; has eight values.&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span&gt;Why don't we compile to &lt;/span&gt;&lt;code&gt;(Prod Bool Bool)&lt;/code&gt;&lt;span&gt; instead, which has four values? More space-efficient...&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;span&gt;... but harder to use.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span&gt;Why the inefficiency? &lt;/span&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;/div&gt;
 &lt;h2 id=&quot;adapting-semiringkanren-code-to-use-bitstrings&quot; pause up-at-unpause&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#adapting-semiringkanren-code-to-use-bitstrings&quot;&gt;&lt;/a&gt;&lt;span&gt;Adapting semiringKanren code to use bitstrings&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;span&gt;Assuming that the bitstring version of type &lt;/span&gt;&lt;code&gt;A&lt;/code&gt;&lt;span&gt; is larger than the bitstring version of type &lt;/span&gt;&lt;code&gt;B&lt;/code&gt;&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(lefto (x : (Sum A B)) (y : A))
+&lt;p&gt;&lt;span&gt;Assuming &lt;/span&gt;\(|A'|&amp;lt;|B'|\)&lt;span&gt;:&lt;/span&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;(righto (x : (Sum A B)) (y : B))
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p pause&gt;&lt;span&gt;becomes&lt;/span&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(fresh (a : A')
-    (fresh (tag : Bool)
-        (conj
-            (pairo (x : (Prod Bool A')) (tag : Bool) (a : A'))
-            (trueo (tag : Bool))
-            (== (a : A') (y : A')))))
+&lt;pre&gt;&lt;code&gt;(fresh (b : B')
+  (fresh (tag : Bool)
+    (conj
+      (pairo (x : (Prod Bool B')) (tag : Bool) (b : B'))
+      (falseo (tag : Bool))
+      (== (b : B') (y : B'))
 &lt;/code&gt;&lt;/pre&gt;
-&lt;br /&gt;
-&lt;pre pause center-at-unpause&gt;&lt;code&gt;(righto (x : (Sum A B)) (y : B))
+&lt;div down-at-unpause pause&gt;
+&lt;pre&gt;&lt;code&gt;(lefto (x : (Sum A B)) (y : A))
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;span&gt;becomes&lt;/span&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(fresh (b : A')
-    (fresh (tag : Bool)
-        (conj
-            (pairo (x : (Prod Bool A')) (tag : Bool) (b : A)')
-            (falseo (tag : Bool))
-            (coerced-== (a : A') (y : B'))
+&lt;pre&gt;&lt;code&gt;(fresh (a : B')
+  (fresh (tag : Bool)
+    (conj
+      (pairo (x : (Prod Bool B')) (tag : Bool) (a : B'))
+      (trueo (tag : Bool))
+      (coerced-== (a : B') (y : A')))))
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 &lt;p pause center-at-unpause&gt;&lt;code&gt;lefto&lt;/code&gt;&lt;span&gt; and &lt;/span&gt;&lt;code&gt;righto&lt;/code&gt;&lt;span&gt; become &lt;/span&gt;&lt;code&gt;trueo&lt;/code&gt;&lt;span&gt; and &lt;/span&gt;&lt;code&gt;falseo&lt;/code&gt;&lt;span&gt;, plus (coerced) unification.&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span&gt;(semiringKanren generates type-safe code for each coerced unification).&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span&gt;All set?&lt;/span&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;example&quot; title=&quot;Fresh trilean compiled&quot; center-at-unpause pause&gt;
-&lt;p pause&gt;&lt;span&gt;Assume the usual semiring on &lt;/span&gt;\(\mathbb{R}\)&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(defrel (fresh-tril)
-    (fresh (t : (Sum Unit (Sum Unit Unit)))
-        (succeed)))
-
-(run () (fresh-bool))
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;span&gt;semiringKanren generates type-safe code for each coerced unification.&lt;/span&gt;&lt;/p&gt;
+&lt;br /&gt;
+&lt;p pause&gt;&lt;span&gt;Note that &lt;/span&gt;&lt;code&gt;(Prod Bool (Prod Bool Bool))&lt;/code&gt;&lt;span&gt; can have &lt;/span&gt;\(2^3=8\)&lt;span&gt; values, but &lt;/span&gt;&lt;code&gt;(Sum Unit (Sum Unit (Sum Unit Unit)))&lt;/code&gt;&lt;span&gt; has &lt;/span&gt;\(1 + 1 + 1 + 1 = 4\)&lt;span&gt; values.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span&gt;semiringKanren constrains variables (relation arguments or &lt;/span&gt;&lt;code&gt;fresh&lt;/code&gt;&lt;span&gt;) to correspond to original values.&lt;/span&gt;&lt;/p&gt;
+&lt;h2 id=&quot;sat-solving-semiringkanren&quot; pause up-at-unpause&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#sat-solving-semiringkanren&quot;&gt;&lt;/a&gt;&lt;span&gt;SAT solving semiringKanren&lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;span&gt;With bitstrings, easy to translate to SAT.&lt;/span&gt;&lt;/p&gt;
 &lt;div pause&gt;
-\[
-\sum [1, 1, 1] = 1 + 1 + 1 = 3
-\]
-&lt;/div&gt;
-&lt;p pause&gt;&lt;span&gt;Compile it. Remember &lt;/span&gt;&lt;code&gt;Bool&lt;/code&gt;&lt;span&gt; is essentially the same as &lt;/span&gt;&lt;code&gt;(Sum Unit Unit)&lt;/code&gt;&lt;span&gt;.&lt;/span&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(define (fresh-tril-comp)
-    (fresh (t : (Prod Bool Bool)) ; or (Prod (Sum Unit Unit) (Sum Unit Unit))
-        (succeed)))
-
-(run () (fresh-tril-comp))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;div pause&gt;
-\[
-\sum [1, 1, 1, 1] = 1 + 1 + 1 + 1 = 4
-\]
-&lt;/div&gt;
-&lt;p&gt;&lt;span&gt;But &lt;/span&gt;\(3 \neq 4\)&lt;span&gt;...&lt;/span&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;p pause center-at-unpause&gt;&lt;span&gt;When introducing a new variable (whether as a relation argument or with a fresh), semiringKanren generates code to constrain the compiled version to correspond to the original type.&lt;/span&gt;&lt;/p&gt;
-&lt;div class=&quot;example&quot; title=&quot;Fresh trilean compiled, fixed&quot; center-at-unpause unreveal-at-unpause=&quot;sat-solving-semiringkanren&quot; pause&gt;
-&lt;p&gt;&lt;span&gt;Here are how trilean values map to compiled trilean values:&lt;/span&gt;&lt;/p&gt;
-\[
-(\text{left}\;\text{sole}) \leadsto (\text{pair}\;\text{true}\;\text{true})
-\]
-\[
-(\text{right}\;(\text{left}\;\text{sole})) \leadsto (\text{pair}\;\text{false}\;\text{true})
-\]
-\[
-(\text{right}\;(\text{right}\;\text{sole})) \leadsto (\text{pair}\;\text{false}\;\text{right})
-\]
-&lt;p pause&gt;&lt;code&gt;(pair left right)&lt;/code&gt;&lt;span&gt; is a valid &lt;/span&gt;&lt;code&gt;(Prod Bool Bool)&lt;/code&gt;&lt;span&gt;, but not a valid compiled trilean, so we need to prevent it:&lt;/span&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(define (fresh-tril-comp)
-    (fresh (t : (Prod Bool Bool)) ; or (Prod (Sum Unit Unit) (Sum Unit Unit))
-        (conj
-            (=/= t (pair left right))
-            (succeed))))
-
-(run () (fresh-tril-comp))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;div pause&gt;
-\[
-\sum [1, 0, 1, 1] = 1 + 0 + 1 + 1 = 3
-\]
-&lt;/div&gt;
-&lt;p&gt;&lt;span&gt;There's the &lt;/span&gt;\(3\)&lt;span&gt; we're looking for.&lt;/span&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;slipshow-rescaler&quot; slip enter-at-unpause&gt;
-&lt;div class=&quot;slip&quot;&gt;
-&lt;div class=&quot;slip-body&quot;&gt;
-&lt;div&gt;
-&lt;div&gt;
-&lt;h2 id=&quot;sat-solving-semiringkanren&quot;&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#sat-solving-semiringkanren&quot;&gt;&lt;/a&gt;&lt;span&gt;SAT solving semiringKanren&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;span&gt;Okay, all set now?&lt;/span&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;example&quot; title=&quot;9x9 sudoku&quot; pause&gt;
-&lt;p&gt;&lt;span&gt;Consider attempting to solve a 9x9 sudoku board with semiringKanren.&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;span&gt;We can compactly represent a digit 0-9 as a binary number with 4 digits. (Using boolean semiring for maximum compactness).&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;span&gt;To represent a 9x9 sudoku board, we need 81 of these digits, one for each square.&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;span&gt;Recall that in semiringKanren, each variable is a dimension of an array.&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;span&gt;So to represent the sudoku board, we need an 81-dimensional array where each dimension is size 4.&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;\(4^{81}\)&lt;span&gt; bits &lt;/span&gt;\(=\)&lt;span&gt; &lt;/span&gt;\(5846006549323611672814739330865132078623730171904\)&lt;span&gt; bits &lt;/span&gt;\(\approx\)&lt;span&gt; &lt;/span&gt;\(7 * 10^{23}\)&lt;span&gt; yottabytes&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;span&gt;Not quite &amp;quot;number of atoms in the universe&amp;quot; level (would be for a larger semiring), but still about 24 orders of magnitude larger than the amount of data that exists (as of September 2025).&lt;/span&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div&gt;
-&lt;p pause&gt;&lt;span&gt;What can we do?&lt;/span&gt;&lt;/p&gt;
-&lt;div pause reveal-at-unpause=&quot;sat-solving-semiringkanren&quot;&gt;&lt;/div&gt;
-&lt;p pause&gt;&lt;span&gt;Compile to bitstrings.&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;span&gt;Unroll/inline recursions (fail when recursion depth limit reached--false negatives, but no false positives).&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;span&gt;Generate a SAT variable for each boolean.&lt;/span&gt;&lt;/p&gt;
-&lt;p pause center-at-unpause&gt;&lt;span&gt;Translate to SAT:&lt;/span&gt;&lt;/p&gt;
 \[
 (\text{trueo}\;x) \leadsto x
 \]
+&lt;/div&gt;
 \[
 (\text{falseo}\;x) \leadsto \neg x
 \]
@@ -2779,7 +2488,8 @@ Goals return relations!
 \[
 (\text{disj}\;x\;y) \leadsto x \vee y
 \]
-&lt;p pause unreveal-at-unpause=&quot;future-work&quot;&gt;&lt;span&gt;And plug it into a SAT solver to evaluate over the boolean semiring.&lt;/span&gt;&lt;/p&gt;
+&lt;p pause unreveal-at-unpause=&quot;future-work&quot;&gt;&lt;span&gt;Evaluates over the boolean semiring. Satisfying expressions succeed, unsatisfying expressions fail.&lt;/span&gt;&lt;/p&gt;
+&lt;p pause&gt;&lt;span&gt;Note: we inline relation calls and recursions to a finite depth; false negatives.&lt;/span&gt;&lt;/p&gt;
 &lt;p pause center-at-unpause&gt;&lt;span&gt;Benchmarks:&lt;/span&gt;&lt;/p&gt;
 &lt;div role=&quot;region&quot;&gt;&lt;table&gt;
 &lt;tr&gt;
@@ -2824,38 +2534,53 @@ Goals return relations!
 &lt;h2 id=&quot;future-work&quot;&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#future-work&quot;&gt;&lt;/a&gt;&lt;span&gt;Future work&lt;/span&gt;&lt;/h2&gt;
 &lt;div pause&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;span&gt;polymorphic relations&lt;/span&gt;
+&lt;li&gt;&lt;span&gt;Polymorphic relations&lt;/span&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;span&gt;without generating a new relation for each type?&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span&gt;Without generating a new relation array for each type?&lt;/span&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
 &lt;div pause&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;span&gt;recursive types&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span&gt;Recursive types&lt;/span&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
 &lt;div pause&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;span&gt;hardware optimization?&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span&gt;SMT solver for smarter recursion and other semirings?&lt;/span&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
 &lt;div pause&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;span&gt;quantum computing or annealing (oh yeah so cool)&lt;/span&gt;
+&lt;li&gt;&lt;span&gt;Quantum computing/annealing&lt;/span&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;span&gt;relation arrays look like superpositions of argument variable values.&lt;/span&gt;&lt;/li&gt;
 &lt;li&gt;&lt;span&gt;get reversibility &amp;quot;for free&amp;quot;&lt;/span&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;span&gt;can do &lt;/span&gt;&lt;code&gt;(run (q) (some-relation 1 q))&lt;/code&gt;&lt;span&gt; or &lt;/span&gt;&lt;code&gt;(run (q) (some-relation q 1))&lt;/code&gt;&lt;span&gt;.&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span&gt;can do &lt;/span&gt;&lt;code&gt;(run (q) (rel 1 q))&lt;/code&gt;&lt;span&gt; or &lt;/span&gt;&lt;code&gt;(run (q) (rel q 1))&lt;/code&gt;&lt;span&gt;.&lt;/span&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
-&lt;div center-at-unpause=&quot;~duration:10 authors&quot; reveal-at-unpause=&quot;repo-link&quot;&gt;&lt;/div&gt;
+&lt;div pause&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;span&gt;Fixpoint convergence for different semirings&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div pause&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;span&gt;Applications of different semirings&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div center-at-unpause=&quot;~duration:5 authors&quot; reveal-at-unpause=&quot;repo-link&quot;&gt;&lt;/div&gt;
+&lt;style&gt;
+body {
+    font-size: 42px;
+}
+&lt;/style&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
