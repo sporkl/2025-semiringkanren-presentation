@@ -1801,12 +1801,11 @@ relevance:0},{begin:/-&gt;/}]})})();hljs.registerLanguage(&quot;ocaml&quot;,e)})
     &lt;div id=&quot;slipshow-main&quot;&gt;
       &lt;div id=&quot;slipshow-content&quot;&gt;
         &lt;svg id=&quot;slipshow-drawing-elem&quot; style=&quot;overflow:visible; position: absolute; z-index:1000&quot;&gt;&lt;/svg&gt;
-        &lt;div class=&quot;slipshow-rescaler&quot; slip enter-at-unpause&gt;
+        &lt;div class=&quot;slipshow-rescaler&quot; enter-at-unpause=&quot;~duration:0&quot; slip down-at-unpause=&quot;~duration:0 title-anchor&quot; unreveal-at-unpause=&quot;repo-link&quot;&gt;
 &lt;div class=&quot;slip&quot;&gt;
 &lt;div class=&quot;slip-body&quot;&gt;
 &lt;div&gt;
 &lt;div&gt;
-&lt;div center-at-unpause=&quot;authors&quot; unreveal-at-unpause=&quot;repo-link&quot;&gt;&lt;/div&gt;
 &lt;h1 id=&quot;title&quot;&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#title&quot;&gt;&lt;/a&gt;&lt;span&gt;Committing to the bit: Relational programming with semiring arrays and SAT solving&lt;/span&gt;&lt;/h1&gt;
 &lt;h3 id=&quot;authors&quot; style=&quot;text-align:center&quot;&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#authors&quot;&gt;&lt;/a&gt;&lt;span&gt;Dmitri Volkov, Yafei Yang, Chung-Chieh Shan&lt;/span&gt;&lt;/h3&gt;
 &lt;h3 id=&quot;indiana-university&quot; style=&quot;text-align:center&quot;&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#indiana-university&quot;&gt;&lt;/a&gt;&lt;span&gt;Indiana University&lt;/span&gt;&lt;/h3&gt;
@@ -1814,7 +1813,11 @@ relevance:0},{begin:/-&gt;/}]})})();hljs.registerLanguage(&quot;ocaml&quot;,e)})
 &lt;div id=&quot;repo-link&quot; style=&quot;text-align:center&quot;&gt;
 &lt;p&gt;&lt;a href=&quot;https://github.com/sporkl/semiringkanren&quot;&gt;&lt;span&gt;https://github.com/sporkl/semiringkanren&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
-&lt;p&gt;&lt;br /&gt;&lt;span&gt; &lt;/span&gt;&lt;br /&gt;&lt;span&gt; &lt;/span&gt;&lt;br /&gt;&lt;span&gt; &lt;/span&gt;&lt;br /&gt;&lt;span&gt; &lt;/span&gt;&lt;br /&gt;&lt;span&gt; &lt;/span&gt;&lt;br /&gt;&lt;span&gt; &lt;/span&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;br /&gt;
+&lt;div id=&quot;title-anchor&quot;&gt;
+&lt;br /&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;br /&gt;&lt;span&gt; &lt;/span&gt;&lt;br /&gt;&lt;span&gt; &lt;/span&gt;&lt;br /&gt;&lt;span&gt; &lt;/span&gt;&lt;br /&gt;&lt;span&gt; &lt;/span&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;slipshow-rescaler&quot; pause slip enter-at-unpause&gt;
 &lt;div class=&quot;slip&quot;&gt;
@@ -1856,9 +1859,9 @@ relevance:0},{begin:/-&gt;/}]})})();hljs.registerLanguage(&quot;ocaml&quot;,e)})
 &lt;pre&gt;&lt;code&gt;(defrel (coin-flip (c : (Sum Unit Unit)))
   (disj
     (fresh (u : Unit)
-      (lefto (c : (Sum Unit Unit) (u : Unit))))
+      (lefto ((c : (Sum Unit Unit)) (u : Unit))))
     (fresh (u : Unit)
-      (righto (c : (Sum Unit Unit) (u : Unit))))))
+      (righto ((c : (Sum Unit Unit)) (u : Unit))))))
 
 (run ((coin : (Sum Unit Unit))) (coin-flip coin))
 &lt;/code&gt;&lt;/pre&gt;
@@ -1926,13 +1929,13 @@ a * (b + c) = (a * b) + (b * c)
 &lt;p pause center-at-unpause&gt;&lt;span&gt;We can express connectivity (or &amp;quot;transitive closure&amp;quot;) in this graph as a recursive relation:&lt;/span&gt;&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;(defrel (connecto (x : Num) (y : Num))
   (disj
-    (graph x y)
+    (grapho x y)
     (fresh ((z : Num))
       (conj
-        (connect x z)
-        (connect z y)))))
+        (connecto x z)
+        (connecto z y)))))
 &lt;/code&gt;&lt;/pre&gt;
-&lt;pre id=&quot;run-transitive-closure&quot; pause center-at-unpause&gt;&lt;code&gt;(run ((x : Num) (y : Num)) (connect x y))
+&lt;pre id=&quot;run-transitive-closure&quot; pause center-at-unpause&gt;&lt;code&gt;(run ((x : Num) (y : Num)) (connecto x y))
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;span&gt;The results change depending on the semiring. For the boolean semiring, we get reachability:&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;data:image/jpeg;base64,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&quot; alt=&quot;&quot; style=&quot;float:right&quot; &gt;&lt;/p&gt;
@@ -2139,7 +2142,7 @@ a * (b + c) = (a * b) + (b * c)
 &lt;/div&gt;
 &lt;div class=&quot;example&quot; title=&quot;One specific boolean&quot; center-at-unpause pause&gt;
 &lt;p&gt;&lt;span&gt;If we consider a relation where only one variable is conditioned:&lt;/span&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(defrel (any-trilean (b : Bool) (t : (Sum Unit Bool)))
+&lt;pre&gt;&lt;code&gt;(defrel (one-specific-bool (x : Bool) (y : Bool))
   (trueo x))
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p pause unreveal-at-unpause=&quot;goals-are-operations-2&quot;&gt;&lt;span&gt;Then the values for each variable are restricted/unrestricted accordingly:&lt;/span&gt;&lt;/p&gt;
@@ -2175,7 +2178,7 @@ a * (b + c) = (a * b) + (b * c)
 &lt;h1 id=&quot;goals-are-operations-2&quot;&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#goals-are-operations-2&quot;&gt;&lt;/a&gt;&lt;span&gt;Goals are operations on relation arrays.&lt;/span&gt;&lt;/h1&gt;
 &lt;p center-at-unpause pause&gt;&lt;span&gt;How do we use these relation arrays in practice?&lt;/span&gt;&lt;/p&gt;
 &lt;div pause reveal-at-unpause=&quot;goals-are-operations-2&quot; up-at-unpause=&quot;goals-are-operations-2&quot;&gt;&lt;/div&gt;
-&lt;p pause&gt;&lt;span&gt;There are two types of goals:&lt;/span&gt;&lt;/p&gt;
+&lt;p pause&gt;&lt;span&gt;There are two classes of goals:&lt;/span&gt;&lt;/p&gt;
 &lt;div id=&quot;relation-goals&quot; pause&gt;
 &lt;h2 id=&quot;low-level-relations&quot;&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#low-level-relations&quot;&gt;&lt;/a&gt;&lt;span&gt;Low-level relations&lt;/span&gt;&lt;/h2&gt;
 &lt;p&gt;&lt;code&gt;soleo&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;lefto&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;righto&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;pairo&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;==&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;=/=&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;succeed&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;fail&lt;/code&gt;&lt;span&gt;, &lt;/span&gt;&lt;code&gt;factor&lt;/code&gt;&lt;span&gt;,&lt;/span&gt;&lt;br /&gt;&lt;span&gt;and relation application&lt;/span&gt;&lt;/p&gt;
@@ -2374,15 +2377,15 @@ a * (b + c) = (a * b) + (b * c)
 &lt;div&gt;
 &lt;div&gt;
 &lt;p&gt;&lt;span&gt;The end.&lt;/span&gt;&lt;/p&gt;
-&lt;br /&gt;
 &lt;h2 id=&quot;&quot; pause&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#&quot;&gt;&lt;/a&gt;&lt;span&gt;...&lt;/span&gt;&lt;/h2&gt;
-&lt;br /&gt;
 &lt;h1 id=&quot;but-what-about-committing-to-the-bit&quot; pause&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#but-what-about-committing-to-the-bit&quot;&gt;&lt;/a&gt;&lt;span&gt;But what about committing to the bit!?&lt;/span&gt;&lt;/h1&gt;
 &lt;p style=&quot;text-align:center&quot;&gt;&lt;span&gt;This presentation didn't really have any jokes...&lt;/span&gt;&lt;/p&gt;
 &lt;br /&gt;
 &lt;p pause&gt;&lt;span&gt;&amp;quot;The joke is that there are no jokes.&amp;quot;&lt;/span&gt;&lt;/p&gt;
 &lt;p pause&gt;&lt;span&gt;&amp;quot;The joke is the meta-humor that 'the joke is that there are no jokes' isn't really that funny.&amp;quot;&lt;/span&gt;&lt;/p&gt;
-&lt;p pause&gt;&lt;span&gt;&amp;quot;Something about the fixpoint of meta-humor.&amp;quot;&lt;/span&gt;&lt;/p&gt;
+&lt;p pause&gt;&lt;span&gt;&amp;quot;The joke is that the meta-humor isn't really that funny.&amp;quot;&lt;/span&gt;&lt;/p&gt;
+&lt;p pause&gt;&lt;span&gt;&amp;quot;The joke is that the meta-humor &lt;/span&gt;&lt;em&gt;&lt;span&gt;still&lt;/span&gt;&lt;/em&gt;&lt;span&gt; isn't really that funny.&amp;quot;&lt;/span&gt;&lt;/p&gt;
+&lt;p pause&gt;&lt;span&gt;We have finished computing the joke by fixpoint.&lt;/span&gt;&lt;/p&gt;
 &lt;br /&gt;
 &lt;h2 id=&quot;compiling-adts-to-bitstrings&quot; pause up-at-unpause&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; href=&quot;#compiling-adts-to-bitstrings&quot;&gt;&lt;/a&gt;&lt;span&gt;Compiling ADTs to bitstrings&lt;/span&gt;&lt;/h2&gt;
 &lt;p&gt;&lt;span&gt;No arbitrary sum types, only booleans.&lt;/span&gt;&lt;/p&gt;

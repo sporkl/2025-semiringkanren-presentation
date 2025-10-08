@@ -1,9 +1,7 @@
 ---
 dimension: 16:9
+toplevel-attributes: enter="~duration:0" slip down="~duration:0 title-anchor" unreveal="repo-link"
 ---
-
-{center="authors"}
-{unreveal="repo-link"}
 
 {#title}
 # Committing to the bit: Relational programming with semiring arrays and SAT solving
@@ -21,7 +19,12 @@ dimension: 16:9
 {#repo-link}
 > [https://github.com/sporkl/semiringkanren](https://github.com/sporkl/semiringkanren)
 
-<br /> <br /> <br /> <br /> <br /> <br /> <br />
+<br />
+
+{#title-anchor}
+<br />
+
+<br /> <br /> <br /> <br /> <br />
 
 {slip}
 {pause}
@@ -90,9 +93,9 @@ Represent heads as `(left sole)` and tails as `(right sole)`.
 (defrel (coin-flip (c : (Sum Unit Unit)))
   (disj
     (fresh (u : Unit)
-      (lefto (c : (Sum Unit Unit) (u : Unit))))
+      (lefto ((c : (Sum Unit Unit)) (u : Unit))))
     (fresh (u : Unit)
-      (righto (c : (Sum Unit Unit) (u : Unit))))))
+      (righto ((c : (Sum Unit Unit)) (u : Unit))))))
 
 (run ((coin : (Sum Unit Unit))) (coin-flip coin))
 ```
@@ -198,17 +201,17 @@ We can express connectivity (or "transitive closure") in this graph as a recursi
 ```
 (defrel (connecto (x : Num) (y : Num))
   (disj
-    (graph x y)
+    (grapho x y)
     (fresh ((z : Num))
       (conj
-        (connect x z)
-        (connect z y)))))
+        (connecto x z)
+        (connecto z y)))))
 ```
 {pause}
 {center}
 {#run-transitive-closure}
 ```
-(run ((x : Num) (y : Num)) (connect x y))
+(run ((x : Num) (y : Num)) (connecto x y))
 ```
 The results change depending on the semiring. For the boolean semiring, we get reachability:
 
@@ -411,7 +414,7 @@ Then `x` should be `true` when `y` is `true`, and same for `false`.
 If we consider a relation where only one variable is conditioned:
 
 ```
-(defrel (any-trilean (b : Bool) (t : (Sum Unit Bool)))
+(defrel (one-specific-bool (x : Bool) (y : Bool))
   (trueo x))
 ```
 
@@ -448,7 +451,7 @@ How do we use these relation arrays in practice?
 {up="goals-are-operations-2"}
 
 {pause}
-There are two types of goals:
+There are two classes of goals:
 
 {pause}
 {#relation-goals}
@@ -706,12 +709,8 @@ Re-evaluating `connecto` gets the same result. All done! [![](transitive-closure
 
 The end.
 
-<br />
-
 {pause}
 ## ...
-
-<br />
 
 {pause}
 # But what about committing to the bit!?
@@ -728,7 +727,13 @@ This presentation didn't really have any jokes...
 "The joke is the meta-humor that 'the joke is that there are no jokes' isn't really that funny."
 
 {pause}
-"Something about the fixpoint of meta-humor."
+"The joke is that the meta-humor isn't really that funny."
+
+{pause}
+"The joke is that the meta-humor *still* isn't really that funny."
+
+{pause}
+We have finished computing the joke by fixpoint.
 
 <br />
 
